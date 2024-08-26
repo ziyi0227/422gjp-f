@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: '422管家婆-家庭收支管理系统',
 
   /**
    * @type {boolean} true | false
