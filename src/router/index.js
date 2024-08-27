@@ -44,6 +44,12 @@ export const constantRoutes = [
   },
 
   {
+    path: '/HPage',
+    component: () => import('@/views/HPage/index'),
+    hidden: true
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
