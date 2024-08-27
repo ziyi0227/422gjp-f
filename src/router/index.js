@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import Info from '@/views/HPage/Info'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -46,6 +47,13 @@ export const constantRoutes = [
   {
     path: '/HPage',
     component: () => import('@/views/HPage/index'),
+    children: [
+      {
+        path: 'info',
+        name: 'info',
+        component: Info // 添加Info路由
+      }
+    ],
     hidden: true
   },
 
