@@ -1,28 +1,27 @@
 <template>
-  <div>
+  <div class="container">
     <div class="HPageTop">
       <div class="Home_avatar">
-        <img v-image-preview :src="avatar" />
+        <img v-image-preview :src="avatar">
       </div>
       <div class="FamilyTop_text">
         <div class="user_text">
           <div class="user_name">
             <span> {{ nickname }} </span>
           </div>
-          <div class="user-v" v-if="v === 3">
-            <img src="@/assets/avatar_example.jpg" class="user-v-img" />
+          <div class="user-v">
+            <img src="@/assets/award.svg" class="user-v-img">
             <span class="user-v-font">优质家庭代表</span>
           </div>
           <div class="user_anniu">
             <el-button
-              class="el-icon-edit"
               v-if="this.$route.params.id === this.$store.state.id"
+              class="el-icon-edit"
               type="primary"
               size="medium"
               plain
               @click="edit"
-            >编辑</el-button
-            >
+            >编辑</el-button>
           </div>
         </div>
       </div>
@@ -31,9 +30,10 @@
       <div class="family_body_left">
         <el-card class="box-card" :body-style="{ padding: '0px' }">
           <div slot="header" class="clearfix">
-            <span class="family_body_list" style="border-bottom: none"
-            >家庭中心</span
-            >
+            <span
+              class="family_body_list"
+              style="border-bottom: none"
+            >家庭中心</span>
           </div>
           <el-menu
             router
@@ -44,21 +44,21 @@
               index="info"
               :route="{ name: 'info', params: $route.params.id }"
             >
-              <i class="el-icon-user"></i>
+              <i class="el-icon-user" />
               <span slot="title">家庭简介</span>
             </el-menu-item>
             <el-menu-item
               index="myarticle"
               :route="{ name: 'myarticle', params: $route.params.id }"
             >
-              <i class="el-icon-edit-outline"></i>
+              <i class="el-icon-edit-outline" />
               <span slot="title">成员管理</span>
             </el-menu-item>
           </el-menu>
         </el-card>
       </div>
       <div class="family_body_right">
-        <router-view></router-view>
+        <router-view />
       </div>
     </div>
     <home-dia ref="dia" @flesh="reload" />
@@ -66,162 +66,66 @@
 </template>
 
 <script>
-import { userInfo } from "@/api/user";
-import HomeDia from "./HomeDia.vue";
+import { userInfo } from '@/api/user'
+import HomeDia from './HomeDia.vue'
 
 export default {
-  name: "HPage",
-  inject: ["reload"],
+  name: 'HPage',
+  components: {
+    HomeDia
+  },
+  inject: ['reload'],
   data() {
     return {
-      avatar: "",
-      nickname: "",
-      v: 1,
-      design: "",
-      followCounts: "",
-      fanCounts: "",
-      goodCounts: "",
-      isfollow: true,
-      followData: {
-        fanId: "",
-        followId: "",
-      },
-      isfollowid: [],
-    };
-  },
-  mounted() {
-    this.load();
+      avatar: '@/assets/avatar_example.jpg',
+      nickname: '422',
+      v: 1
+    }
   },
   watch: {
     $route(to, from) {
       if (to.path == `/newsuser/family/${this.$store.state.id}`) {
-        this.reload();
+        this.reload()
       } else if (to.path == `/newsuser/family/${this.$route.params.id}`) {
-        this.reload();
+        this.reload()
       }
-    },
+    }
+  },
+  mounted() {
+    this.load()
+  //  TODO: 加一个钩子直接显示信息
   },
   methods: {
     load() {
       userInfo(this.$route.params.id)
         .then((res) => {
-          this.avatar = res.data.avatar;
-          this.nickname = res.data.nickname;
-          this.v = res.data.v;
-          this.design = res.data.design;
+          this.avatar = res.data.avatar
+          this.nickname = res.data.nickname
         })
         .catch((err) => {
-          console.log(err);
-        });
-
-      myFollow(this.$store.state.id)
-        .then((res) => {
-          res.data.forEach((res) => {
-            this.isfollowid.push(res.id);
-          });
+          console.log(err)
         })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      followAndFanCount(this.$route.params.id)
-        .then((res) => {
-          this.followCounts = res.data.followCounts;
-          this.fanCounts = res.data.fanCounts;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      mygoodCount(this.$route.params.id)
-        .then((res) => {
-          this.goodCounts = res.data.goodCounts;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    myfan() {
-      this.$router.push({
-        path: `/newsuser/family/myfan/${this.$route.params.id}`,
-      });
-    },
-    myfollow() {
-      this.$router.push({
-        path: `/newsuser/family/myfollow/${this.$route.params.id}`,
-      });
-    },
-    follow() {
-      if (!this.$store.state.id) {
-        this.$message({
-          showClose: true,
-          message: "请登录后再进行操作哦",
-          type: "warning",
-        });
-      } else {
-        this.followData.followId = this.$route.params.id;
-        this.followData.fanId = this.$store.state.id;
-        if (this.isfollowid.indexOf(this.followData.followId) > -1) {
-          this.isfollow = true;
-        } else {
-          this.isfollow = false;
-        }
-        if (this.isfollow) {
-          deleteFollow(this.followData)
-            .then((res) => {
-              this.isfollow = false;
-              this.$message({
-                showClose: true,
-                message: "已取消关注",
-                type: "success",
-              });
-              this.reload();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else if (!this.isfollow) {
-          addFollow(this.followData)
-            .then((res) => {
-              this.isfollow = true;
-              this.$message({
-                showClose: true,
-                message: "已成功关注",
-                type: "success",
-              });
-              this.reload();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }
     },
     edit() {
-      this.$refs.dia.open();
-    },
-  },
-};
+      this.$refs.dia.open()
+    }
+  }
+}
 </script>
 
 <style scoped>
-.me-video-player {
-  background-color: transparent;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  display: block;
-  position: fixed;
-  left: 0;
-  z-index: 0;
-  top: 0;
+.container {
+  background-color: #eaeaeb; /* 淡灰色 */
+  min-height: 100vh; /* 至少占据视口高度 */
 }
+
 .HPageTop {
   width: 1000px;
-  height: 140px;
+  height: 160px;
   padding-top: 20px;
   background-color: white;
   margin-top: 30px;
+  margin-bottom: 30px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -259,9 +163,12 @@ export default {
 
 .user_name {
   font-weight: bold;
+  font-size: 24px;
+  margin-top: 3px;
+  margin-bottom: 7px;
 }
 .user-v {
-  margin-bottom: -5px;
+  /*margin-bottom: -5px;*/
 }
 .user-v-img {
   width: 15px;
@@ -270,14 +177,6 @@ export default {
 .user-v-font {
   font-size: 15px;
   color: #00c3ff;
-}
-
-.user_qianming {
-  width: 90%;
-  height: 30px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .user_anniu {
@@ -313,9 +212,9 @@ export default {
 }
 
 .family_body_right {
-  width: 60%;
+  width: 67%;
   height: 100%;
-  margin-left: 100px;
+  margin-left: 20px;
 }
 
 .box-card {
