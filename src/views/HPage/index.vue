@@ -13,9 +13,6 @@
             <img src="@/assets/avatar_example.jpg" class="user-v-img" />
             <span class="user-v-font">优质家庭代表</span>
           </div>
-          <div class="user_qianming">
-            <span> {{ design }}</span>
-          </div>
           <div class="user_anniu">
             <el-button
               class="el-icon-edit"
@@ -26,32 +23,6 @@
               @click="edit"
             >编辑</el-button
             >
-            <el-button
-              v-else
-              @click="follow"
-              type="primary"
-              size="medium"
-              icon="el-icon-check"
-              v-text="
-                isfollowid.indexOf(this.$route.params.id) > -1
-                  ? '已关注'
-                  : '关注'
-              "
-            ></el-button>
-          </div>
-        </div>
-        <div class="user_num">
-          <div style="cursor: pointer" @click="myfan">
-            <div class="num_number">{{ fanCounts }}</div>
-            <span class="num_text">粉丝</span>
-          </div>
-          <div style="cursor: pointer" @click="myfollow">
-            <div class="num_number">{{ followCounts }}</div>
-            <span class="num_text">关注</span>
-          </div>
-          <div>
-            <div class="num_number">{{ goodCounts }}</div>
-            <span class="num_text">获赞</span>
           </div>
         </div>
       </div>
@@ -81,28 +52,7 @@
               :route="{ name: 'myarticle', params: $route.params.id }"
             >
               <i class="el-icon-edit-outline"></i>
-              <span slot="title">发帖</span>
-            </el-menu-item>
-            <el-menu-item
-              index="mycollect"
-              :route="{ name: 'mycollect', params: $route.params.id }"
-            >
-              <i class="el-icon-document"></i>
-              <span slot="title">收藏</span>
-            </el-menu-item>
-            <el-menu-item
-              index="myfan"
-              :route="{ name: 'myfan', params: $route.params.id }"
-            >
-              <i class="el-icon-tableware"></i>
-              <span slot="title">粉丝</span>
-            </el-menu-item>
-            <el-menu-item
-              index="myfollow"
-              :route="{ name: 'myfollow', params: $route.params.id }"
-            >
-              <i class="el-icon-circle-plus-outline"></i>
-              <span slot="title">关注</span>
+              <span slot="title">成员管理</span>
             </el-menu-item>
           </el-menu>
         </el-card>
@@ -111,12 +61,13 @@
         <router-view></router-view>
       </div>
     </div>
-    <personal-dia ref="dia" @flesh="reload" />
+    <home-dia ref="dia" @flesh="reload" />
   </div>
 </template>
 
 <script>
 import { userInfo } from "@/api/user";
+import HomeDia from "./HomeDia.vue";
 
 export default {
   name: "HPage",
