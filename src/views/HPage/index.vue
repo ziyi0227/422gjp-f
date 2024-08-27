@@ -93,6 +93,7 @@ export default {
   },
   mounted() {
     this.load()
+  //  TODO: 加一个钩子直接显示信息
   },
   methods: {
     load() {
@@ -178,14 +179,6 @@ export default {
   color: #00c3ff;
 }
 
-.user_qianming {
-  width: 90%;
-  height: 30px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .user_anniu {
   width: 60%;
   height: 30px;
@@ -219,9 +212,9 @@ export default {
 }
 
 .family_body_right {
-  width: 60%;
+  width: 67%;
   height: 100%;
-  margin-left: 100px;
+  margin-left: 20px;
 }
 
 .box-card {
