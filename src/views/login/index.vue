@@ -76,6 +76,37 @@
 
       </el-form-item>
 
+      <el-form-item v-if="!isLoginForm" prop="name">
+        <span class="svg-container">
+          <svg-icon icon-class="name"/>
+        </span>
+        <el-input
+          v-model="activeForm.name"
+          type=text
+          placeholder="家庭昵称"
+          name="name"
+          tabindex="4"
+          auto-complete="on"
+          @keyup.enter.native="handleLoginOrRegister"
+        />
+
+      </el-form-item>
+
+      <el-form-item v-if="!isLoginForm" prop="userType">
+        <span class="svg-container">
+          <svg-icon icon-class="user"/>
+        </span>
+        <el-input
+          v-model="activeForm.userType"
+          placeholder="注册人家庭身份"
+          name="userType"
+          tabindex="5"
+          auto-complete="on"
+          @keyup.enter.native="handleLoginOrRegister"
+        >
+        </el-input>
+      </el-form-item>
+
       <!-- 登录/注册按钮 -->
       <el-button
         :loading="loading"
@@ -126,10 +157,11 @@ export default {
     }
     return {
       activeForm: {
-        type: '',
         username: 'admin',
         password: '123456',
-        rePassword: ''
+        rePassword: '',
+        name: '',
+        userType: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -285,13 +317,18 @@ $light_gray: #6c9bbe;
   background-image: url("~@/assets/login-bg.svg");
   background-size: 100%;
 
+  display: flex;
+  align-items: center;
+
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 35px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+    background-color: #fafafb; /* 浅灰色背景 */
+    border-radius: 10px; /* 圆角大小 */
   }
 
   .tips {
