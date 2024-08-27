@@ -49,7 +49,7 @@
             </el-menu-item>
             <el-menu-item
               index="myarticle"
-              :route="{ name: 'myarticle', params: $route.params.id }"
+              :route="{ name: 'memberManage', params: $route.params.id }"
             >
               <i class="el-icon-edit-outline" />
               <span slot="title">成员管理</span>

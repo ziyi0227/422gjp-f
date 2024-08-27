@@ -52,6 +52,11 @@ export const constantRoutes = [
         path: 'info',
         name: 'info',
         component: Info // 添加Info路由
+      },
+      {
+        path: 'memberManage',
+        name: 'memberManage',
+        component: () => import('@/views/HPage/memberManage')
       }
     ],
     hidden: true
