@@ -23,7 +23,7 @@
             <el-dropdown-item style="text-align: center">后端代码</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block; text-align: center">注销</span>
+            <span style="display:block; text-align: center">登出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

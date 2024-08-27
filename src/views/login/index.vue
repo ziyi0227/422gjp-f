@@ -315,7 +315,7 @@ $light_gray: #6c9bbe;
   overflow: hidden;
 
   background-image: url("~@/assets/login-bg.svg");
-  background-size: 100%;
+  background-size: 50%;
 
   display: flex;
   align-items: center;
