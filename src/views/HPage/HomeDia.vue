@@ -4,59 +4,33 @@
       title="修改家庭信息"
       :visible.sync="dialogVisible"
       width="60%"
-      :before-close="handleClose">
-      <el-form :model="form" :rules="rules" ref="form" label-width="150px">
+      :before-close="handleClose"
+    >
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <div class="updateinfo">
           <div class="left">
             <el-form-item label="家庭头像" prop="avatar">
               <img style="width:150px;height:110px" :src="form.avatar">
             </el-form-item>
             <el-form-item label="家庭密码" prop="password">
-              <el-input v-model="form.password"></el-input>
+              <el-input v-model="form.password" />
             </el-form-item>
             <el-form-item label="家庭名称" prop="nickname">
-              <el-input v-model="form.nickname"></el-input>
+              <el-input v-model="form.nickname" />
             </el-form-item>
-            <el-form-item label="家庭成员年龄" prop="age">
-              <el-input v-model="form.age"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" prop="sex">
-              <el-switch
-                v-model="form.sex"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                active-text="男"
-                inactive-text="女"
-                :active-value="1"
-                :inactive-value="0"
-              >
-              </el-switch>
-            </el-form-item>
-            <el-form-item label="家庭邮箱" prop="email">
-              <el-input v-model="form.email"></el-input>
+            <el-form-item label="家庭成员数量" prop="familyNumber">
+              <el-input v-model="form.familyNumber" />
             </el-form-item>
           </div>
           <div class="right">
             <el-form-item label="家庭编号" prop="id">
-              <el-input v-model="form.id" disabled></el-input>
+              <el-input v-model="form.id" disabled />
             </el-form-item>
             <el-form-item label="家庭账号" prop="account">
-              <el-input v-model="form.account" disabled></el-input>
+              <el-input v-model="form.account" disabled />
             </el-form-item>
             <el-form-item label="所在地区" prop="area">
-              <el-input v-model="form.area"></el-input>
-            </el-form-item>
-            <el-form-item label="家庭兴趣" prop="hobby">
-              <el-input v-model="form.hobby"></el-input>
-            </el-form-item>
-            <el-form-item label="家庭职业" prop="work">
-              <el-input v-model="form.work"></el-input>
-            </el-form-item>
-            <el-form-item label="家庭签名" prop="design">
-              <el-input v-model="form.design"></el-input>
-            </el-form-item>
-            <el-form-item label="联系方式" prop="mobilePhoneNumber">
-              <el-input v-model="form.mobilePhoneNumber"></el-input>
+              <el-input v-model="form.area" />
             </el-form-item>
           </div>
         </div>
@@ -70,72 +44,66 @@
 </template>
 
 <script>
-import { userInfo, updateUser } from "@/api/user.js";
+import { HomeInfo, updateInfo } from '@/api/user.js'
 
 export default {
-  name: "HomeDia",
+  name: 'HomeDia',
   data() {
     return {
       dialogVisible: false,
       form: {
-        avatar: "",
-        password: "",
-        nickname: "",
-        age: Number,
-        email: "",
-        mobilePhoneNumber: "",
-        sex: Number,
+        avatar: '',
+        password: '',
+        nickname: '',
+        familyNumber: Number,
         id: Number,
-        account: "",
-        area: "",
-        hobby: "",
-        work: "",
-        design: "",
+        account: '',
+        area: ''
       },
       rules: {
         nickname: [
-          { required: true, message: "家庭名称不能为空", trigger: "blur" },
+          { required: true, message: '家庭名称不能为空', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "家庭密码不能为空", trigger: "blur" },
-        ],
-      },
-    };
+          { required: true, message: '家庭密码不能为空', trigger: 'blur' }
+        ]
+      }
+    }
   },
   mounted() {
-    this.load();
+    this.load()
   },
   methods: {
     open() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
     load() {
-      userInfo(this.$store.state.id)
+      HomeInfo(this.$store.state.id)
         .then((res) => {
-          console.log(res);
-          Object.assign(this.form, res.data);
+          console.log(res)
+          Object.assign(this.form, res.data)
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     submit() {
-      updateUser(this.form)
+      updateInfo(this.form)
         .then((res) => {
-          console.log(res);
-          this.dialogVisible = false;
-          this.$emit("flesh");
+          console.log(res)
+          this.dialogVisible = false
+          this.$emit('flesh')
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     handleClose() {
-      this.dialogVisible = false;
-      this.$emit("flesh");
-    },
-  },
-};
+      this.dialogVisible = false
+      this.$emit('flesh')
+    }
+  }
+}
 </script>
 
 <style scoped>
