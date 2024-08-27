@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="activeForm" :model="activeForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">422管家婆——家庭财务管理系统！</h3>
       </div>
 
       <el-form-item prop="username">
@@ -12,8 +12,8 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
+          v-model="activeForm.username"
+          placeholder="家庭用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -21,32 +21,74 @@
         />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item v-if="isLoginForm" prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model="activeForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
+          @keyup.enter.native="handleLoginOrRegister"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <!-- 注册 -->
+      <el-form-item v-else prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password"/>
+        </span>
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="activeForm.password"
+          :type="passwordType"
+          placeholder="密码"
+          name="password"
+          tabindex="2"
+          auto-complete="on"
+          @keyup.enter.native="handleLoginOrRegister"
+        />
+      </el-form-item>
+      <div v-if="!isLoginForm" class="password-confirm-gap"/>
+      <!-- 确认密码 -->
+      <el-form-item v-if="!isLoginForm" prop="rePassword">
+        <span class="svg-container">
+          <svg-icon icon-class="password"/>
+        </span>
+        <el-input
+          v-model="activeForm.rePassword"
+          :type="passwordType"
+          placeholder="确认密码"
+          name="rePassword"
+          tabindex="3"
+          auto-complete="on"
+          @keyup.enter.native="handleLoginOrRegister"
+        />
 
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
-      </div>
+      </el-form-item>
+
+      <!-- 登录/注册按钮 -->
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLoginOrRegister"
+      >{{ activeButton }}
+      </el-button>
+
+      <!-- 切换按钮 -->
+      <el-button type="text" @click="toggleForm">
+        {{ isLoginForm ? '注册新账号' : '返回登录' }}
+      </el-button>
 
     </el-form>
   </div>
@@ -54,36 +96,51 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { Message } from 'element-ui'
 
 export default {
-  name: 'Login',
+  name: 'LoginAndRegister',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位'))
+      } else {
+        callback()
+      }
+    }
+    const validateRePassword = (rule, value, callback) => {
+      if (value !== this.activeForm.password) {
+        callback(new Error('两次输入的密码不一致'))
+      } else if (value === '') {
+        callback(new Error('请再次确认密码'))
       } else {
         callback()
       }
     }
     return {
-      loginForm: {
+      activeForm: {
+        type: '',
         username: 'admin',
-        password: '111111'
+        password: '123456',
+        rePassword: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        rePassword: [{ required: true, trigger: 'blur', validator: validateRePassword }]
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      activeButton: '登 录',
+      isLoginForm: true
     }
   },
   watch: {
@@ -105,16 +162,58 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+    toggleForm() {
+      this.clearData()
+      this.isLoginForm = !this.isLoginForm
+      this.activeButton = this.isLoginForm ? '登 录' : '注 册'
+      this.$nextTick(() => {
+        this.$refs.username.focus()
+      })
+    },
+    clearData() {
+      this.activeForm.username = ''
+      this.activeForm.password = ''
+      this.activeForm.rePassword = ''
+    },
+    async handleLoginOrRegister() {
+      this.$refs.activeForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+          if (this.isLoginForm) {
+            this.$store.dispatch('user/login', this.activeForm).then(() => {
+              this.loading = false
+              this.$router.push({ path: this.redirect || '/' })
+              Message.success('登录成功')
+            }).catch(() => {
+              this.loading = false
+            })
+            // login(this.activeForm).then(res => {
+            //   if (res.code === 20000) {
+            //     this.loading = false
+            //     Message.success('登录成功')
+            //     // this.$router.push('/dashboard')
+            //   } else {
+            //     this.loading = false
+            //     Message.error(res.message)
+            //   }
+            // }).catch(() => {
+            //   this.loading = false
+            // })
+          }
+          if (!this.isLoginForm) {
+            register(this.activeForm).then(res => {
+              if (res.code === 20000) {
+                this.loading = false
+                Message.success('注册成功')
+                this.toggleForm()
+              } else {
+                this.loading = false
+                Message.error(res.message)
+              }
+            }).catch(() => {
+              this.loading = false
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -152,7 +251,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: #2c3c50;
       height: 47px;
       caret-color: $cursor;
 
@@ -173,15 +272,18 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #fdfdfe;
+$dark_gray: #2c3c50;
+$light_gray: #6c9bbe;
 
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+
+  background-image: url("~@/assets/login-bg.svg");
+  background-size: 100%;
 
   .login-form {
     position: relative;
