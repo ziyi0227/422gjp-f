@@ -25,7 +25,7 @@
       </el-table>
 
       <!-- 用户信息编辑对话框 -->
-      <el-dialog :visible.sync="dialogFormVisible" :title="dialogTitle" @close="clearForm">
+      <el-dialog :modal-append-to-body="false" :visible.sync="dialogFormVisible" :title="dialogTitle" @close="clearForm">
         <el-form ref="userFormRef" :model="userForm" :rules="rules">
           <el-form-item label="成员ID" prop="id">
             <el-input v-model="userForm.id" autocomplete="off" />

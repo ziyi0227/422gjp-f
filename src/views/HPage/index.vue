@@ -116,11 +116,11 @@ export default {
 <style scoped>
 .container {
   background-color: #eaeaeb; /* 淡灰色 */
-  min-height: 100vh; /* 至少占据视口高度 */
+  height: 100%;
 }
 
 .HPageTop {
-  width: 1000px;
+  width: 996px;
   height: 160px;
   padding-top: 20px;
   background-color: white;
