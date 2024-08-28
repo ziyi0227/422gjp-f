@@ -26,7 +26,7 @@
         <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI" />
+        <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI(null)" />
       </el-col>
     </el-card>
     <!--结果列表-->
@@ -68,7 +68,12 @@
         <el-table-column
           label="操作"
           width="180"
-        />
+        >
+          <template slot-scope="scope">
+            <el-button @click="openEditUI(scope.row.id)" type="primary" icon="el-icon-edit" size="mini" circle></el-button>
+            <el-button @click="deleteIncome(scope.row)" type="danger" icon="el-icon-delete" size="mini" circle></el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
 
@@ -84,7 +89,7 @@
     />
 
     <!--  用户信息编辑对话框-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+    <el-dialog @close="clearForm" :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="inForm">
         <el-form-item label="日期" :label-width="formLabelWidth">
           <el-date-picker
@@ -148,8 +153,8 @@ export default {
         pageSize: 10
       },
       inList: [
-        { index: 1, date: '2024-08-01', type: '父亲', income: 1000, category: '工资', mark: '本月工资' },
-        { index: 2, date: '2024-08-02', type: '母亲', income: 500, category: '奖金', mark: '季度奖金' },
+        { index: 1, date: '2024-08-01', type: '父亲', income: 1000, category: '工资', mark: '本月工资', id: 1 },
+        { index: 2, date: '2024-08-02', type: '母亲', income: 500, category: '奖金', mark: '季度奖金', id: 2 },
         { index: 3, date: '2024-08-03', type: '儿子', income: 300, category: '奖学金', mark: '学校奖学金' },
         { index: 4, date: '2024-08-04', type: '女儿', income: 200, category: '压岁钱', mark: '春节红包' },
         { index: 5, date: '2024-08-05', type: '父亲', income: 500, category: '股票', mark: '股市收益' },
@@ -179,8 +184,16 @@ export default {
     }
   },
   methods: {
-    openEditUI() {
-      this.title = '新增用户'
+    clearForm() {
+      this.inForm = {}
+    },
+    openEditUI(id) {
+      if(id == null){
+        this.title = '新增收入记录'
+      } else {
+        this.title = '修改收入记录'
+        // TODO：根据id查询用户数据
+      }
       this.dialogFormVisible = true
     },
     handleSizeChange() {
@@ -188,6 +201,24 @@ export default {
     },
     handleCurrentChange() {
 
+    },
+    deleteIncome(income){
+      this.$confirm('此操作将删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // TODO：删除逻辑
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   }
 }
