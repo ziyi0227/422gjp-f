@@ -70,8 +70,8 @@
           width="180"
         >
           <template slot-scope="scope">
-            <el-button @click="openEditUI(scope.row.id)" type="primary" icon="el-icon-edit" size="mini" circle></el-button>
-            <el-button @click="deleteIncome(scope.row)" type="danger" icon="el-icon-delete" size="mini" circle></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row.id)" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteIncome(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
@@ -89,7 +89,7 @@
     />
 
     <!--  用户信息编辑对话框-->
-    <el-dialog @close="clearForm" :title="title" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="inForm">
         <el-form-item label="日期" :label-width="formLabelWidth">
           <el-date-picker
@@ -188,7 +188,7 @@ export default {
       this.inForm = {}
     },
     openEditUI(id) {
-      if(id == null){
+      if (id == null) {
         this.title = '新增收入记录'
       } else {
         this.title = '修改收入记录'
@@ -202,7 +202,7 @@ export default {
     handleCurrentChange() {
 
     },
-    deleteIncome(income){
+    deleteIncome(income) {
       this.$confirm('此操作将删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -212,13 +212,13 @@ export default {
         this.$message({
           type: 'success',
           message: '删除成功!'
-        });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
-        });
-      });
+        })
+      })
     }
   }
 }
