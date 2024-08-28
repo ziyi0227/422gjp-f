@@ -36,6 +36,10 @@
         stripe
         style="width: 100%"
       >
+<!--        <template slot-scope="scope">-->
+          <!-- (pageNo -1 ) * pageSize + index + 1 -->
+<!--          {{(searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1}}-->
+<!--        </template>>-->
         <el-table-column
           prop="index"
           label="#"
