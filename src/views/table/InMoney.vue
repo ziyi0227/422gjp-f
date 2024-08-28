@@ -19,8 +19,8 @@
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
-          end-placeholder="结束日期">
-        </el-date-picker>
+          end-placeholder="结束日期"
+        />
       </el-col>
       <el-col :span="3">
         <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
@@ -37,21 +37,51 @@
         style="width: 100%"
       >
         <el-table-column
+          prop="index"
+          label="#"
+          width="60"
+        />
+        <el-table-column
           prop="date"
           label="日期"
+          width="120"
+        />
+        <el-table-column
+          prop="type"
+          label="身份"
+          width="80"
+        />
+        <el-table-column
+          prop="income"
+          label="金额"
+          width="100"
+        />
+        <el-table-column
+          prop="category"
+          label="类别"
           width="180"
         />
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="180"
+          prop="mark"
+          label="备注"
         />
         <el-table-column
-          prop="address"
-          label="地址"
+          label="操作"
+          width="180"
         />
       </el-table>
     </el-card>
+
+    <!--  分页组件-->
+    <el-pagination
+      :current-page="searchModel.pageNo"
+      :page-sizes="[5, 10, 20, 50]"
+      :page-size="searchModel.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -60,6 +90,7 @@ export default {
   name: 'InMoney',
   data() {
     return {
+      total: 0,
       options: [{
         value: '选项1',
         label: '父亲'
@@ -73,8 +104,19 @@ export default {
         value: '选项4',
         label: '女儿'
       }],
-      searchModel: {},
+      searchModel: {
+        pageNo: 1,
+        pageSize: 10
+      },
       inList: []
+    }
+  },
+  methods: {
+    handleSizeChange() {
+
+    },
+    handleCurrentChange() {
+
     }
   }
 }
@@ -86,5 +128,9 @@ export default {
 }
 .el-card{
   margin-bottom: 10px;
+}
+.el-pagination{
+  display: flex;
+  justify-content: center;
 }
 </style>
