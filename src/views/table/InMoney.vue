@@ -26,7 +26,7 @@
         <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" icon="el-icon-plus" circle />
+        <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI" />
       </el-col>
     </el-card>
     <!--结果列表-->
@@ -82,6 +82,42 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+
+    <!--  用户信息编辑对话框-->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="inForm">
+        <el-form-item label="日期" :label-width="formLabelWidth">
+          <el-date-picker
+            v-model="inForm.date"
+            type="date"
+            placeholder="选择日期"
+          />
+        </el-form-item>
+        <el-form-item label="身份" :label-width="formLabelWidth">
+          <el-select v-model="inForm.type" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="金额" :label-width="formLabelWidth">
+          <el-input v-model="inForm.income" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="类别" :label-width="formLabelWidth">
+          <el-cascader v-model="inForm.category" :props="props" />
+        </el-form-item>
+        <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-input v-model="inForm.mark" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,7 +126,10 @@ export default {
   name: 'InMoney',
   data() {
     return {
+      formLabelWidth: '110px',
+      dialogFormVisible: false,
       total: 0,
+      title: '',
       options: [{
         value: '选项1',
         label: '父亲'
@@ -108,10 +147,42 @@ export default {
         pageNo: 1,
         pageSize: 10
       },
-      inList: []
+      inList: [
+        { index: 1, date: '2024-08-01', type: '父亲', income: 1000, category: '工资', mark: '本月工资' },
+        { index: 2, date: '2024-08-02', type: '母亲', income: 500, category: '奖金', mark: '季度奖金' },
+        { index: 3, date: '2024-08-03', type: '儿子', income: 300, category: '奖学金', mark: '学校奖学金' },
+        { index: 4, date: '2024-08-04', type: '女儿', income: 200, category: '压岁钱', mark: '春节红包' },
+        { index: 5, date: '2024-08-05', type: '父亲', income: 500, category: '股票', mark: '股市收益' },
+        { index: 6, date: '2024-08-06', type: '母亲', income: 100, category: '兼职', mark: '周末兼职' },
+        { index: 7, date: '2024-08-07', type: '儿子', income: 50, category: '零花钱', mark: '父母给的零花钱' },
+        { index: 8, date: '2024-08-08', type: '女儿', income: 150, category: '演出费', mark: '儿童剧表演费用' },
+        { index: 9, date: '2024-08-09', type: '父亲', income: 200, category: '投资回报', mark: '基金分红' },
+        { index: 10, date: '2024-08-10', type: '母亲', income: 300, category: '稿费', mark: '文章稿酬' }
+      ],
+      inForm: {},
+      props: { // 级联配置
+        lazy: true,
+        lazyLoad(node, resolve) {
+          const { level } = node
+          setTimeout(() => {
+            const nodes = Array.from({ length: level + 1 })
+              .map(item => ({
+                value: ++id,
+                label: `选项${id}`,
+                leaf: level >= 2
+              }))
+            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+            resolve(nodes)
+          }, 1000)
+        }
+      }
     }
   },
   methods: {
+    openEditUI() {
+      this.title = '新增用户'
+      this.dialogFormVisible = true
+    },
     handleSizeChange() {
 
     },
@@ -132,5 +203,8 @@ export default {
 .el-pagination{
   display: flex;
   justify-content: center;
+}
+.el-dialog .el-input{
+  width: 85%;
 }
 </style>
