@@ -22,6 +22,14 @@
               plain
               @click="edit"
             >编辑</el-button>
+            <!-- 新增返回按钮 -->
+            <el-button
+              class="el-button-return"
+              type="primary"
+              size="medium"
+              plain
+              @click="goBack"
+            >返回</el-button>
           </div>
         </div>
       </div>
@@ -108,6 +116,9 @@ export default {
     },
     edit() {
       this.$refs.dia.open()
+    },
+    goBack() {
+      this.$router.push('/dashboard') // 返回上一个页面
     }
   }
 }
@@ -117,8 +128,15 @@ export default {
 .container {
   background-color: #eaeaeb; /* 淡灰色 */
   height: 100%;
+  position: relative; /* 添加相对定位，以便返回按钮的绝对定位 */
 }
 
+/* 返回按钮位置 */
+.el-button-return {
+  position: absolute;
+  bottom: 20px; /* 距离底部20px */
+  right: 20px; /* 距离右侧20px */
+}
 .HPageTop {
   width: 996px;
   height: 160px;
