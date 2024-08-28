@@ -109,6 +109,19 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/out-money',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'OutMoney',
+        component: () => import('@/views/table/OutMoney'),
+        meta: { title: '支出表格', icon: 'out-money' }
+      }
+    ]
+  },
+
   // {
   //   path: '/nested',
   //   component: Layout,
