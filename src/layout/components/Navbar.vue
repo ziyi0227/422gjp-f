@@ -5,8 +5,10 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <a>切换主题</a>
-      <ThemePicker @change="themeChange" />
+      <div class="theme-switch-container right-menu-item hover-effect">
+        <a class="theme-switch-text">切换主题</a>
+        <ThemePicker @change="themeChange" />
+      </div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -86,7 +88,7 @@ export default {
     -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, .025);
     }
   }
 
@@ -98,6 +100,8 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
+    display: flex;
+    align-items: center;
 
     &:focus {
       outline: none;
@@ -116,12 +120,29 @@ export default {
         transition: background .3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, .025);
+          border-radius: 5px;
         }
       }
     }
+    .theme-switch-container {
+      display: flex;
+      align-items: center;
+      margin-right: 40px; /* 增加 margin-right 确保与 el-dropdown 之间有足够的间距 */
+    }
+    .theme-switch-text {
+      margin-right: 5px;
+      font-weight: bold; /* 加粗文字 */
+      color: #000; /* 设置文字颜色为黑色 */
+    }
+
+    .theme-switch-container a {
+      margin-right: 5px;
+    }
 
     .avatar-container {
+      position: relative;
+      z-index: 10; /* 提高 z-index 确保下拉菜单在顶部 */
       margin-right: 30px;
 
       .avatar-wrapper {
