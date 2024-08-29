@@ -21,10 +21,10 @@
               title="家庭净资产"
             >
               <template slot="prefix">
-                <i class="el-icon-s-flag" style="color: red"></i>
+                <i class="el-icon-s-flag" style="color: red" />
               </template>
               <template slot="suffix">
-                <i class="el-icon-s-flag" style="color: blue"></i>
+                <i class="el-icon-s-flag" style="color: blue" />
               </template>
             </el-statistic>
           </div>
@@ -41,7 +41,7 @@
                 <i
                   class="el-icon-star-on"
                   style="color:red"
-                ></i>
+                />
               </template>
             </el-statistic>
           </div>
@@ -80,6 +80,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import * as echarts from 'echarts/core'
+import {
+  DatasetComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  TransformComponent
+} from 'echarts/components'
+import { LineChart } from 'echarts/charts'
+import { LabelLayout, UniversalTransition } from 'echarts/features'
+import { CanvasRenderer } from 'echarts/renderers'
 
 export default {
   name: 'Dashboard',
