@@ -1,6 +1,8 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <el-card>
+      <span>统计数值</span>
+    </el-card>
   </div>
 </template>
 
