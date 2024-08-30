@@ -48,6 +48,9 @@
         </el-col>
       </el-row>
     </el-card>
+    <el-card>
+      <el-progress :percentage="100" :format="format"></el-progress>
+    </el-card>
     <el-row :gutter="20">
       <el-col :span="12">
         <el-card>
@@ -93,6 +96,12 @@
           <!--  TODO:markdown-->
           </el-col>
         </el-row>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span="8">
+
+          </el-col>
+        </el-row>
       </div>
     </el-card>
   </div>
@@ -125,6 +134,11 @@ export default {
       memberNumber: 5,
       totalMoney: 120000.00,
       increaseMoney: 5000
+    }
+  },
+  methods: {
+    format(percentage) {
+      return percentage === 100 ? '超预算' : `${percentage}%`
     }
   }
 }
