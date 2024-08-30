@@ -128,6 +128,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { Message } from 'element-ui'
+import { login,register } from '@/api/user'
 
 export default {
   name: 'LoginAndRegister',
