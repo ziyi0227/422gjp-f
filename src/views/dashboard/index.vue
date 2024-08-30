@@ -138,17 +138,17 @@ export default {
     AccessFrom,
     CircleAccessFrom
   },
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  },
   data() {
     return {
       memberNumber: 5,
       totalMoney: 120000.00,
       increaseMoney: 5000
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
   },
   methods: {
     format(percentage) {
