@@ -88,7 +88,9 @@
             <AreaChart />
           </el-col>
           <el-col :span="6">
-            <span>111</span>
+            <span>分析</span>
+            <el-divider direction="vertical"></el-divider>
+          <!--  TODO:markdown-->
           </el-col>
         </el-row>
       </div>
