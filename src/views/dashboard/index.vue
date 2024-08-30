@@ -56,10 +56,7 @@
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
-            <span>月度收入统计线性</span>
-            <el-row>
-              <!--<LineChart />-->
-            </el-row>
+            <LineChart></LineChart>
           </div>
           <div>
             <BingChart></BingChart>

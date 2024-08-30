@@ -1,39 +1,151 @@
 <template>
-  <LineChart class="chart" :option="option" />
+  <div id="lineChart" :style="{ width: '550px', height: '375px' }" />
 </template>
 
 <script>
-import { use } from 'echarts/core'
+import * as echarts from 'echarts/core'
+import {
+  DatasetComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  TransformComponent
+} from 'echarts/components'
 import { LineChart } from 'echarts/charts'
-import { GridComponent } from 'echarts/components'
+import { LabelLayout, UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
 
-use([GridComponent, LineChart, CanvasRenderer])
+echarts.use([
+  DatasetComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  TransformComponent,
+  LineChart,
+  CanvasRenderer,
+  LabelLayout,
+  UniversalTransition
+])
 
 export default {
   name: 'LineChart',
+
   data() {
     return {
-      option: {
+      option: null,
+      datasetWithFilters: [],
+      seriesList: [],
+      sampleData: [
+        { Year: 1950, Country: 'Germany', Income: 400 },
+        { Year: 1960, Country: 'Germany', Income: 450 },
+        { Year: 1970, Country: 'Germany', Income: 500 },
+        { Year: 1950, Country: 'France', Income: 380 },
+        { Year: 1960, Country: 'France', Income: 420 },
+        { Year: 1970, Country: 'France', Income: 480 },
+        { Year: 1980, Country: 'France', Income: 480 },
+        { Year: 1990, Country: 'France', Income: 480 }
+      ]
+    }
+  },
+
+  mounted() {
+    this.loadChartData(this.sampleData)
+  },
+
+  methods: {
+    loadChartData(_rawData) {
+      this.run(_rawData)
+      this.drawLine()
+    },
+
+    run(_rawData) {
+      const countries = [
+        'Germany',
+        'France'
+      ]
+
+      this.datasetWithFilters = []
+      this.seriesList = []
+
+      countries.forEach(country => {
+        const datasetId = 'dataset_' + country
+        this.datasetWithFilters.push({
+          id: datasetId,
+          fromDatasetId: 'dataset_raw',
+          transform: {
+            type: 'filter',
+            config: {
+              and: [
+                { dimension: 'Year', gte: 1950 },
+                { dimension: 'Country', '=': country }
+              ]
+            }
+          }
+        })
+        this.seriesList.push({
+          type: 'line',
+          datasetId: datasetId,
+          showSymbol: false,
+          name: country,
+          endLabel: {
+            show: true,
+            formatter: params => params.value[3] + ': ' + params.value[0]
+          },
+          labelLayout: {
+            moveOverlap: 'shiftY'
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          encode: {
+            x: 'Year',
+            y: 'Income',
+            label: ['Country', 'Income'],
+            itemName: 'Year',
+            tooltip: ['Income']
+          }
+        })
+      })
+
+      this.option = {
+        animationDuration: 10000,
+        dataset: [
+          {
+            id: 'dataset_raw',
+            source: _rawData
+          },
+          ...this.datasetWithFilters
+        ],
+        title: {
+          text: '月度收入统计'
+        },
+        tooltip: {
+          order: 'valueDesc',
+          trigger: 'axis'
+        },
         xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          nameLocation: 'middle'
         },
         yAxis: {
-          type: 'value'
+          name: 'Income'
         },
-        series: [
-          {
-            data: [150, 230, 224, 218, 135, 147, 260],
-            type: 'line'
-          }
-        ]
+        grid: {
+          right: 140
+        },
+        series: this.seriesList
+      }
+    },
+
+    drawLine() {
+      const chartDom = document.getElementById('lineChart')
+      if (chartDom) {
+        const myChart = echarts.init(chartDom)
+        if (this.option) {
+          myChart.setOption(this.option)
+        }
       }
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>
