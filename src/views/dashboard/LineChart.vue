@@ -124,6 +124,13 @@ export default {
           order: 'valueDesc',
           trigger: 'axis'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            saveAsImage: { show: true }
+          }
+        },
         xAxis: {
           type: 'category',
           nameLocation: 'middle'
@@ -150,7 +157,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

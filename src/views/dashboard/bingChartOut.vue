@@ -35,6 +35,13 @@ export default {
           top: '10%',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            saveAsImage: { show: true }
+          }
+        },
         color: ['#6eb158', '#cdcdcd', '#3f8cff'],
         series: [
           {

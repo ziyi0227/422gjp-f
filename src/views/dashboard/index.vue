@@ -48,11 +48,15 @@
         </el-col>
       </el-row>
     </el-card>
+    <el-card>
+      <el-progress :percentage="10" :format="format"></el-progress>
+    </el-card>
     <el-row :gutter="20">
       <el-col :span="12">
         <el-card>
           <div slot="header" class="clearfix">
             <span>收入统计</span>
+            <!--TODO: 抽屉，分析-->
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
@@ -67,6 +71,7 @@
         <el-card>
           <div slot="header" class="clearfix">
             <span>支出统计</span>
+            <!--TODO: 抽屉，分析-->
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
@@ -88,7 +93,21 @@
             <AreaChart />
           </el-col>
           <el-col :span="6">
-            <span>111</span>
+            <span>分析</span>
+            <el-divider direction="vertical"></el-divider>
+          <!--  TODO:markdown-->
+          </el-col>
+        </el-row>
+        <el-divider></el-divider>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <NightingaleChart></NightingaleChart>
+          </el-col>
+          <el-col :span="8">
+            <AccessFrom></AccessFrom>
+          </el-col>
+          <el-col :span="8">
+            <CircleAccessFrom></CircleAccessFrom>
           </el-col>
         </el-row>
       </div>
@@ -103,6 +122,9 @@ import BingChart from '@/views/dashboard/bingChart'
 import BingChartOut from '@/views/dashboard/bingChartOut'
 import LineChartOut from '@/views/dashboard/LineChartOut'
 import AreaChart from '@/views/dashboard/AreaChart'
+import NightingaleChart from '@/views/dashboard/NightingaleChart'
+import AccessFrom from '@/views/dashboard/AccessFrom'
+import CircleAccessFrom from '@/views/dashboard/CircleAccessFrom'
 
 export default {
   name: 'Dashboard',
@@ -111,7 +133,10 @@ export default {
     BingChart,
     BingChartOut,
     LineChartOut,
-    AreaChart
+    AreaChart,
+    NightingaleChart,
+    AccessFrom,
+    CircleAccessFrom
   },
   computed: {
     ...mapGetters([
@@ -123,6 +148,11 @@ export default {
       memberNumber: 5,
       totalMoney: 120000.00,
       increaseMoney: 5000
+    }
+  },
+  methods: {
+    format(percentage) {
+      return percentage === 100 ? '超预算' : `${percentage}%`
     }
   }
 }

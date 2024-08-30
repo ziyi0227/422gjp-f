@@ -1,4 +1,3 @@
-
 <template>
   <div id="AreaChart" :title="title" :style="{ width: '700px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
 </template>
@@ -47,7 +46,7 @@ export default {
         },
         toolbox: {
           feature: {
-            saveAsImage: { }
+            saveAsImage: {}
           }
         },
         grid: {
