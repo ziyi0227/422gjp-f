@@ -56,6 +56,7 @@
         <el-card>
           <div slot="header" class="clearfix">
             <span>收入统计</span>
+            <!--TODO: 抽屉，分析-->
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
@@ -70,6 +71,7 @@
         <el-card>
           <div slot="header" class="clearfix">
             <span>支出统计</span>
+            <!--TODO: 抽屉，分析-->
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
@@ -101,6 +103,9 @@
           <el-col :span="8">
             <NightingaleChart></NightingaleChart>
           </el-col>
+          <el-col :span="8">
+            <AccessFrom></AccessFrom>
+          </el-col>
         </el-row>
       </div>
     </el-card>
@@ -115,6 +120,7 @@ import BingChartOut from '@/views/dashboard/bingChartOut'
 import LineChartOut from '@/views/dashboard/LineChartOut'
 import AreaChart from '@/views/dashboard/AreaChart'
 import NightingaleChart from "@/views/dashboard/NightingaleChart";
+import AccessFrom from "@/views/dashboard/AccessFrom";
 
 export default {
   name: 'Dashboard',
@@ -124,7 +130,8 @@ export default {
     BingChartOut,
     LineChartOut,
     AreaChart,
-    NightingaleChart
+    NightingaleChart,
+    AccessFrom
   },
   computed: {
     ...mapGetters([

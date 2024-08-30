@@ -1,5 +1,5 @@
 <template>
-  <div id="NightingaleChart" :title="title" :style="{ width: '400px', height: '420px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
+  <div id="NightingaleChart" :title="title" :style="{ width: '350px', height: '420px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
 </template>
 
 <script>
@@ -30,20 +30,21 @@ export default {
         legend: {
           top: 'bottom'
         },
+        tooltip: {
+          trigger: 'item'
+        },
         toolbox: {
           show: true,
           feature: {
             mark: { show: true },
-            dataView: { show: true, readOnly: false },
-            restore: { show: true },
             saveAsImage: { show: true }
           }
         },
         series: [
           {
-            name: 'Nightingale Chart',
+            name: '消费饭店榜',
             type: 'pie',
-            radius: [50, 125],
+            radius: [50, 110],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
