@@ -1,5 +1,5 @@
 <template>
-  <div id="AccessFrom" :title="title" :style="{ width: '350px', height: '420px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
+  <div id="AccessFrom" :title="title" :style="{ width: '325px', height: '420px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
 </template>
 
 <script>

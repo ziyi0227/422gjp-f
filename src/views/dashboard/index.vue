@@ -106,6 +106,9 @@
           <el-col :span="8">
             <AccessFrom></AccessFrom>
           </el-col>
+          <el-col :span="8">
+            <CircleAccessFrom></CircleAccessFrom>
+          </el-col>
         </el-row>
       </div>
     </el-card>
@@ -121,6 +124,7 @@ import LineChartOut from '@/views/dashboard/LineChartOut'
 import AreaChart from '@/views/dashboard/AreaChart'
 import NightingaleChart from "@/views/dashboard/NightingaleChart";
 import AccessFrom from "@/views/dashboard/AccessFrom";
+import CircleAccessFrom from "@/views/dashboard/CircleAccessFrom";
 
 export default {
   name: 'Dashboard',
@@ -131,7 +135,8 @@ export default {
     LineChartOut,
     AreaChart,
     NightingaleChart,
-    AccessFrom
+    AccessFrom,
+    CircleAccessFrom
   },
   computed: {
     ...mapGetters([
