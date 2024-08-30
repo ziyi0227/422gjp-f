@@ -82,6 +82,16 @@
       <div slot="header" class="clearfix">
         <span>统计与分析</span>
       </div>
+      <div>
+        <el-row>
+          <el-col :span="18">
+            <AreaChart />
+          </el-col>
+          <el-col :span="6">
+            <span>111</span>
+          </el-col>
+        </el-row>
+      </div>
     </el-card>
   </div>
 </template>
@@ -92,6 +102,7 @@ import LineChart from '@/views/dashboard/LineChart'
 import BingChart from '@/views/dashboard/bingChart'
 import BingChartOut from '@/views/dashboard/bingChartOut'
 import LineChartOut from '@/views/dashboard/LineChartOut'
+import AreaChart from '@/views/dashboard/AreaChart'
 
 export default {
   name: 'Dashboard',
@@ -99,7 +110,8 @@ export default {
     LineChart,
     BingChart,
     BingChartOut,
-    LineChartOut
+    LineChartOut,
+    AreaChart
   },
   computed: {
     ...mapGetters([
