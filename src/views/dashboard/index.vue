@@ -57,9 +57,12 @@
           </div>
           <div>
             <span>月度收入统计线性</span>
+            <el-row>
+              <!--<LineChart />-->
+            </el-row>
           </div>
           <div>
-            <span>收入类别统计圆饼</span>
+            <BingChart></BingChart>
           </div>
         </el-card>
       </el-col>
@@ -80,20 +83,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import * as echarts from 'echarts/core'
-import {
-  DatasetComponent,
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  TransformComponent
-} from 'echarts/components'
-import { LineChart } from 'echarts/charts'
-import { LabelLayout, UniversalTransition } from 'echarts/features'
-import { CanvasRenderer } from 'echarts/renderers'
+import LineChart from '@/views/dashboard/LineChart'
+import BingChart from '@/views/dashboard/bingChart'
 
 export default {
   name: 'Dashboard',
+  components: {
+    LineChart,
+    BingChart
+  },
   computed: {
     ...mapGetters([
       'name'

@@ -13,7 +13,11 @@ import store from './store'
 import router from './router'
 
 import '@/icons' // icon
-import '@/permission' // permission control
+import '@/permission'
+// import ECharts from 'vue-echarts' // permission control
+// import 'echarts'
+import * as echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 /**
  * If you don't want to use mock-server
@@ -34,6 +38,7 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+// Vue.component('ECharts', ECharts)
 
 new Vue({
   el: '#app',
