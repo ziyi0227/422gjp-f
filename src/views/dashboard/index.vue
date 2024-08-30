@@ -56,10 +56,10 @@
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
-            <LineChart></LineChart>
+            <LineChart />
           </div>
           <div>
-            <BingChart></BingChart>
+            <BingChart />
           </div>
         </el-card>
       </el-col>
@@ -68,6 +68,9 @@
           <div slot="header" class="clearfix">
             <span>支出统计</span>
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
+          </div>
+          <div>
+            <BingChartOut></BingChartOut>
           </div>
         </el-card>
       </el-col>
@@ -82,12 +85,14 @@
 import { mapGetters } from 'vuex'
 import LineChart from '@/views/dashboard/LineChart'
 import BingChart from '@/views/dashboard/bingChart'
+import BingChartOut from '@/views/dashboard/bingChartOut'
 
 export default {
   name: 'Dashboard',
   components: {
     LineChart,
-    BingChart
+    BingChart,
+    BingChartOut
   },
   computed: {
     ...mapGetters([
