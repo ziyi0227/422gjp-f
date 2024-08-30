@@ -36,14 +36,14 @@ export default {
       datasetWithFilters: [],
       seriesList: [],
       sampleData: [
-        { Year: 1950, Country: 'Germany', Income: 400 },
-        { Year: 1960, Country: 'Germany', Income: 450 },
-        { Year: 1970, Country: 'Germany', Income: 500 },
-        { Year: 1950, Country: 'France', Income: 380 },
-        { Year: 1960, Country: 'France', Income: 420 },
-        { Year: 1970, Country: 'France', Income: 480 },
-        { Year: 1980, Country: 'France', Income: 480 },
-        { Year: 1990, Country: 'France', Income: 480 }
+        { Month: 1, category: '总收入', Income: 400 },
+        { Month: 2, category: '总收入', Income: 450 },
+        { Month: 3, category: '总收入', Income: 500 },
+        { Month: 1, category: '工资收入', Income: 380 },
+        { Month: 2, category: '工资收入', Income: 420 },
+        { Month: 3, category: '工资收入', Income: 480 },
+        { Month: 4, category: '工资收入', Income: 480 },
+        { Month: 5, category: '工资收入', Income: 480 }
       ]
     }
   },
@@ -59,16 +59,16 @@ export default {
     },
 
     run(_rawData) {
-      const countries = [
-        'Germany',
-        'France'
+      const categories = [
+        '总收入',
+        '工资收入'
       ]
 
       this.datasetWithFilters = []
       this.seriesList = []
 
-      countries.forEach(country => {
-        const datasetId = 'dataset_' + country
+      categories.forEach(category => {
+        const datasetId = 'dataset_' + category
         this.datasetWithFilters.push({
           id: datasetId,
           fromDatasetId: 'dataset_raw',
@@ -76,8 +76,8 @@ export default {
             type: 'filter',
             config: {
               and: [
-                { dimension: 'Year', gte: 1950 },
-                { dimension: 'Country', '=': country }
+                { dimension: 'Month', gte: 1 },
+                { dimension: 'category', '=': category }
               ]
             }
           }
@@ -86,10 +86,10 @@ export default {
           type: 'line',
           datasetId: datasetId,
           showSymbol: false,
-          name: country,
+          name: category,
           endLabel: {
-            show: true,
-            formatter: params => params.value[3] + ': ' + params.value[0]
+            show: false,
+            formatter: params => `${params.value[1]}: ${params.value[2]}`
           },
           labelLayout: {
             moveOverlap: 'shiftY'
@@ -98,10 +98,10 @@ export default {
             focus: 'series'
           },
           encode: {
-            x: 'Year',
+            x: 'Month',
             y: 'Income',
-            label: ['Country', 'Income'],
-            itemName: 'Year',
+            label: ['category', 'Income'],
+            itemName: 'Month',
             tooltip: ['Income']
           }
         })
@@ -117,7 +117,8 @@ export default {
           ...this.datasetWithFilters
         ],
         title: {
-          text: '月度收入统计'
+          text: '月度收入统计',
+          left: '170px'
         },
         tooltip: {
           order: 'valueDesc',
