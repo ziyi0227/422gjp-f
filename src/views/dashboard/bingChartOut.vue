@@ -1,15 +1,15 @@
 <template>
-  <div id="bingChart" :title="title" :style="{ width: '450px', height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
+  <div id="bingChartOut" :title="title" :style="{ width: '450px', height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
 </template>
 
 <script>
 
 export default {
-  name: 'BingChart',
+  name: 'BingChartOut',
 
   data() {
     return {
-      title: '收入类别统计'
+      title: '支出类别统计'
     }
   },
 
@@ -20,7 +20,7 @@ export default {
   methods: {
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      const myChart = this.$echarts.init(document.getElementById('bingChart'))
+      const myChart = this.$echarts.init(document.getElementById('bingChartOut'))
       // 绘制图表
       myChart.setOption({
         title: {
@@ -38,13 +38,13 @@ export default {
         color: ['#6eb158', '#cdcdcd', '#3f8cff'],
         series: [
           {
-            name: '收入类别',
+            name: '支出类别',
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 1048, name: '工资与奖金' },
-              { value: 735, name: '摆摊收入' },
-              { value: 580, name: '红包收入' }
+              { value: 1048, name: '吃饭' },
+              { value: 735, name: '玩' },
+              { value: 580, name: '氪金' }
             ],
             emphasis: {
               itemStyle: {

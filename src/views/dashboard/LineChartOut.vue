@@ -1,5 +1,5 @@
 <template>
-  <div id="lineChart" :style="{ width: '550px', height: '375px' }" />
+  <div id="lineChartOut" :style="{ width: '550px', height: '375px' }" />
 </template>
 
 <script>
@@ -28,7 +28,7 @@ echarts.use([
 ])
 
 export default {
-  name: 'LineChart',
+  name: 'LineChartOut',
 
   data() {
     return {
@@ -36,14 +36,14 @@ export default {
       datasetWithFilters: [],
       seriesList: [],
       sampleData: [
-        { Month: 1, category: '总收入', Income: 400 },
-        { Month: 2, category: '总收入', Income: 450 },
-        { Month: 3, category: '总收入', Income: 500 },
-        { Month: 1, category: '工资收入', Income: 380 },
-        { Month: 2, category: '工资收入', Income: 420 },
-        { Month: 3, category: '工资收入', Income: 480 },
-        { Month: 4, category: '工资收入', Income: 480 },
-        { Month: 5, category: '工资收入', Income: 480 }
+        { Month: 1, category: '总支出', Outcome: 400 },
+        { Month: 2, category: '总支出', Outcome: 450 },
+        { Month: 3, category: '总支出', Outcome: 500 },
+        { Month: 1, category: '吃饭', Outcome: 380 },
+        { Month: 2, category: '吃饭', Outcome: 420 },
+        { Month: 3, category: '吃饭', Outcome: 480 },
+        { Month: 4, category: '吃饭', Outcome: 480 },
+        { Month: 5, category: '吃饭', Outcome: 480 }
       ]
     }
   },
@@ -60,8 +60,8 @@ export default {
 
     run(_rawData) {
       const categories = [
-        '总收入',
-        '工资收入'
+        '总支出',
+        '吃饭'
       ]
 
       this.datasetWithFilters = []
@@ -99,10 +99,10 @@ export default {
           },
           encode: {
             x: 'Month',
-            y: 'Income',
-            label: ['category', 'Income'],
+            y: 'Outcome',
+            label: ['category', 'Outcome'],
             itemName: 'Month',
-            tooltip: ['Income']
+            tooltip: ['Outcome']
           }
         })
       })
@@ -117,7 +117,7 @@ export default {
           ...this.datasetWithFilters
         ],
         title: {
-          text: '月度收入统计',
+          text: '月度支出统计',
           left: '170px'
         },
         tooltip: {
@@ -129,7 +129,7 @@ export default {
           nameLocation: 'middle'
         },
         yAxis: {
-          name: 'Income'
+          name: 'Outcome'
         },
         grid: {
           right: 140
@@ -139,7 +139,7 @@ export default {
     },
 
     drawLine() {
-      const chartDom = document.getElementById('lineChart')
+      const chartDom = document.getElementById('lineChartOut')
       if (chartDom) {
         const myChart = echarts.init(chartDom)
         if (this.option) {
@@ -150,7 +150,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

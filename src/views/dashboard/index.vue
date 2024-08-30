@@ -56,13 +56,10 @@
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
           <div>
-            <span>月度收入统计线性</span>
-            <el-row>
-              <!--<LineChart />-->
-            </el-row>
+            <LineChart />
           </div>
           <div>
-            <BingChart></BingChart>
+            <BingChart />
           </div>
         </el-card>
       </el-col>
@@ -72,11 +69,29 @@
             <span>支出统计</span>
             <el-button style="float: right; padding: 3px 0" type="text">分析></el-button>
           </div>
+          <div>
+            <LineChartOut />
+          </div>
+          <div>
+            <BingChartOut />
+          </div>
         </el-card>
       </el-col>
     </el-row>
     <el-card>
-      <span>统计与分析</span>
+      <div slot="header" class="clearfix">
+        <span>统计与分析</span>
+      </div>
+      <div>
+        <el-row>
+          <el-col :span="18">
+            <AreaChart />
+          </el-col>
+          <el-col :span="6">
+            <span>111</span>
+          </el-col>
+        </el-row>
+      </div>
     </el-card>
   </div>
 </template>
@@ -85,12 +100,18 @@
 import { mapGetters } from 'vuex'
 import LineChart from '@/views/dashboard/LineChart'
 import BingChart from '@/views/dashboard/bingChart'
+import BingChartOut from '@/views/dashboard/bingChartOut'
+import LineChartOut from '@/views/dashboard/LineChartOut'
+import AreaChart from '@/views/dashboard/AreaChart'
 
 export default {
   name: 'Dashboard',
   components: {
     LineChart,
-    BingChart
+    BingChart,
+    BingChartOut,
+    LineChartOut,
+    AreaChart
   },
   computed: {
     ...mapGetters([
