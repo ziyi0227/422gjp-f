@@ -62,7 +62,6 @@
             </el-row>
           </div>
           <div>
-            <span>收入类别统计圆饼</span>
             <BingChart></BingChart>
           </div>
         </el-card>

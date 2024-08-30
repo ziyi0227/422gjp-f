@@ -1,5 +1,5 @@
 <template>
-  <div id="myChart" :style="{ width: '450px', height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
+  <div id="bingChart" :style="{ width: '450px', height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
 </template>
 
 <script>
@@ -17,11 +17,11 @@ export default {
   methods: {
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      const myChart = this.$echarts.init(document.getElementById('myChart'))
+      const myChart = this.$echarts.init(document.getElementById('bingChart'))
       // 绘制图表
       myChart.setOption({
         title: {
-          text: '全校分班人数统计',
+          text: '收入类别统计',
           left: 'center'
         },
         tooltip: {
@@ -35,13 +35,13 @@ export default {
         color: ['#6eb158', '#cdcdcd', '#3f8cff'],
         series: [
           {
-            name: '分班情况',
+            name: '收入类别',
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 1048, name: '已分班人数' },
-              { value: 735, name: '未分班人数' },
-              { value: 580, name: '待认定人数' }
+              { value: 1048, name: '工资与奖金' },
+              { value: 735, name: '摆摊收入' },
+              { value: 580, name: '红包收入' }
             ],
             emphasis: {
               itemStyle: {
