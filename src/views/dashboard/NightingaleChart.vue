@@ -1,5 +1,5 @@
 <template>
-  <div id="NightingaleChart" :title="title" :style="{ width: '450px', height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
+  <div id="NightingaleChart" :title="title" :style="{ width: '400px', height: '420px', display: 'flex', justifyContent: 'center', alignItems: 'center' }" />
 </template>
 
 <script>
@@ -9,7 +9,7 @@ export default {
 
   data() {
     return {
-      title: '收入类别统计'
+      title: '消费饭店榜'
     }
   },
 
@@ -20,47 +20,42 @@ export default {
   methods: {
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      const myChart = this.$echarts.init(document.getElementById('bingChart'))
+      const myChart = this.$echarts.init(document.getElementById('NightingaleChart'))
       // 绘制图表
       myChart.setOption({
         title: {
           text: this.title,
           left: 'center'
         },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
         legend: {
-          top: '10%',
-          left: 'center'
+          top: 'bottom'
         },
-        color: ['#6eb158', '#cdcdcd', '#3f8cff'],
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+          }
+        },
         series: [
           {
-            name: '收入类别',
+            name: 'Nightingale Chart',
             type: 'pie',
-            radius: '50%',
-            data: [
-              { value: 1048, name: '工资与奖金' },
-              { value: 735, name: '摆摊收入' },
-              { value: 580, name: '红包收入' }
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
+            radius: [50, 125],
+            center: ['50%', '50%'],
+            roseType: 'area',
+            itemStyle: {
+              borderRadius: 8
             },
-            label: {
-              formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}:}{c}  {per|{d}%}  ',
-              backgroundColor: '',
-              borderColor: '',
-              borderWidth: 1,
-              borderRadius: 4,
-              rich: {}
-            }
+            data: [
+              { value: 40, name: '重庆小面' },
+              { value: 38, name: '衢州小炒' },
+              { value: 32, name: '在西安' },
+              { value: 30, name: '麦当劳' },
+              { value: 28, name: '华莱士' }
+            ]
           }
         ]
       })

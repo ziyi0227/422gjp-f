@@ -97,9 +97,9 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-        <el-row>
+        <el-row :gutter="10">
           <el-col :span="8">
-
+            <NightingaleChart></NightingaleChart>
           </el-col>
         </el-row>
       </div>
@@ -114,6 +114,7 @@ import BingChart from '@/views/dashboard/bingChart'
 import BingChartOut from '@/views/dashboard/bingChartOut'
 import LineChartOut from '@/views/dashboard/LineChartOut'
 import AreaChart from '@/views/dashboard/AreaChart'
+import NightingaleChart from "@/views/dashboard/NightingaleChart";
 
 export default {
   name: 'Dashboard',
@@ -122,7 +123,8 @@ export default {
     BingChart,
     BingChartOut,
     LineChartOut,
-    AreaChart
+    AreaChart,
+    NightingaleChart
   },
   computed: {
     ...mapGetters([
