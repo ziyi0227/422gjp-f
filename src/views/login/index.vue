@@ -29,7 +29,7 @@
           :key="passwordType"
           ref="password"
           v-model="activeForm.password"
-          :type="passwordType"
+          type="passwordType"
           placeholder="密码"
           name="password"
           tabindex="2"
@@ -78,11 +78,11 @@
 
       <el-form-item v-if="!isLoginForm" prop="name">
         <span class="svg-container">
-          <svg-icon icon-class="name"/>
+          <svg-icon icon-class="name" />
         </span>
         <el-input
           v-model="activeForm.name"
-          type=text
+          type="text"
           placeholder="家庭昵称"
           name="name"
           tabindex="4"
@@ -94,7 +94,7 @@
 
       <el-form-item v-if="!isLoginForm" prop="userType">
         <span class="svg-container">
-          <svg-icon icon-class="user"/>
+          <svg-icon icon-class="user" />
         </span>
         <el-input
           v-model="activeForm.userType"
@@ -128,7 +128,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { Message } from 'element-ui'
-import { login,register } from '@/api/user'
+import { login, register } from '@/api/user'
 
 export default {
   name: 'LoginAndRegister',
@@ -158,8 +158,8 @@ export default {
     }
     return {
       activeForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
         rePassword: '',
         name: '',
         userType: ''
@@ -280,16 +280,16 @@ $cursor: #fff;
 
     input {
       background: transparent;
-      border: 0px;
+      border: 0;
       -webkit-appearance: none;
-      border-radius: 0px;
+      border-radius: 0;
       padding: 12px 5px 12px 15px;
       color: #2c3c50;
       height: 47px;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        box-shadow: 0 0 0 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
     }
@@ -358,7 +358,7 @@ $light_gray: #6c9bbe;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0 auto 40px auto;
       text-align: center;
       font-weight: bold;
     }
