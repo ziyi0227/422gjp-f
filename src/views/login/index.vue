@@ -44,7 +44,7 @@
       <!-- 注册 -->
       <el-form-item v-else prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"/>
+          <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
@@ -58,11 +58,11 @@
           @keyup.enter.native="handleLoginOrRegister"
         />
       </el-form-item>
-      <div v-if="!isLoginForm" class="password-confirm-gap"/>
+      <div v-if="!isLoginForm" class="password-confirm-gap" />
       <!-- 确认密码 -->
       <el-form-item v-if="!isLoginForm" prop="rePassword">
         <span class="svg-container">
-          <svg-icon icon-class="password"/>
+          <svg-icon icon-class="password" />
         </span>
         <el-input
           v-model="activeForm.rePassword"
@@ -78,7 +78,7 @@
 
       <el-form-item v-if="!isLoginForm" prop="name">
         <span class="svg-container">
-          <svg-icon icon-class="name"/>
+          <svg-icon icon-class="name" />
         </span>
         <el-input
           v-model="activeForm.name"
@@ -94,7 +94,7 @@
 
       <el-form-item v-if="!isLoginForm" prop="userType">
         <span class="svg-container">
-          <svg-icon icon-class="user"/>
+          <svg-icon icon-class="user" />
         </span>
         <el-input
           v-model="activeForm.userType"
