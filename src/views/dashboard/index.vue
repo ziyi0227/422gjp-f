@@ -75,7 +75,8 @@
               :title="drawerTitle"
               :visible.sync="drawer"
               :direction="direction"
-              :before-close="handleClose">
+              :before-close="handleClose"
+            >
               <!-- 使用带有滚动条的容器包裹评语内容 -->
               <div class="drawerText">
                 <el-scrollbar style="height: 100%; margin-outside: 3px">
@@ -154,11 +155,6 @@ export default {
     VueMarkdown,
     CircleAccessFrom
   },
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  },
   data() {
     return {
       memberNumber: 5,
@@ -175,6 +171,11 @@ export default {
       drawerType: '',
       drawerTitle: ''
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
   },
   methods: {
     format(percentage) {

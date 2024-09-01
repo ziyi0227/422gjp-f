@@ -29,6 +29,7 @@
           :key="passwordType"
           ref="password"
           v-model="activeForm.password"
+          show-password
           type="passwordType"
           placeholder="密码"
           name="password"
@@ -44,7 +45,7 @@
       <!-- 注册 -->
       <el-form-item v-else prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"/>
+          <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"

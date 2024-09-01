@@ -22,16 +22,34 @@ export function getInfo(token) {
     params: { token }
   })
 }
-export function getUserInfo() {
+export function getFamilyInfo() {
   return request({
-    url: '/family/Info',
-    method: 'get'
+    url: '/family/getInfo',
+    method: 'post'
   })
 }
 
 export function logout() {
   return request({
     url: '/family/logout',
+    method: 'post'
+  })
+}
+export function updateInfo() {
+  return request({
+    url: '/family/updateInfo',
+    method: 'post'
+  })
+}
+export function deleteUser() {
+  return request({
+    url: '/family/deleteUser',
+    method: 'post'
+  })
+}
+export function addUser() {
+  return request({
+    url: '/family/addUser',
     method: 'post'
   })
 }

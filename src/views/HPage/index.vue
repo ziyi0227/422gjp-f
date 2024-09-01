@@ -2,7 +2,7 @@
   <div class="container">
     <div class="HPageTop">
       <div class="Home_avatar">
-        <img v-image-preview :src="avatar">
+        <img style="width:150px;height:110px" :src="avatar" alt="pic">
       </div>
       <div class="FamilyTop_text">
         <div class="user_text">
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { userInfo } from '@/api/user'
+import { getFamilyInfo } from '@/api/user'
 import HomeDia from './HomeDia.vue'
 
 export default {
@@ -85,9 +85,9 @@ export default {
   inject: ['reload'],
   data() {
     return {
-      avatar: '@/assets/avatar_example.jpg',
-      nickname: '422',
-      v: 1
+      avatar: '',
+      nickname: ''
+      // v: 1
     }
   },
   watch: {
@@ -101,14 +101,14 @@ export default {
   },
   mounted() {
     this.load()
-  //  TODO: 加一个钩子直接显示信息
+    //  TODO: 加一个钩子直接显示信息
   },
   methods: {
     load() {
-      userInfo(this.$route.params.id)
+      getFamilyInfo()
         .then((res) => {
-          this.avatar = res.data.avatar
-          this.nickname = res.data.nickname
+          this.avatar = res.data.avatarUrl
+          this.nickname = res.data.name
         })
         .catch((err) => {
           console.log(err)

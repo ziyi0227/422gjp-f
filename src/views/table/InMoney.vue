@@ -5,12 +5,7 @@
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
         <el-select v-model="searchModel.member" multiple placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
       <el-col :span="15">
@@ -31,48 +26,18 @@
     </el-card>
     <!--结果列表-->
     <el-card>
-      <el-table
-        :data="inList"
-        stripe
-        style="width: 100%"
-      >
+      <el-table :data="inList" stripe style="width: 100%">
 <!--        <template slot-scope="scope">-->
-          <!-- (pageNo -1 ) * pageSize + index + 1 -->
-<!--          {{(searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1}}-->
+          <!--           (pageNo -1 ) * pageSize + index + 1 -->
+<!--          {{ (searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1 }}-->
 <!--        </template>>-->
-        <el-table-column
-          prop="index"
-          label="#"
-          width="60"
-        />
-        <el-table-column
-          prop="date"
-          label="日期"
-          width="120"
-        />
-        <el-table-column
-          prop="type"
-          label="身份"
-          width="80"
-        />
-        <el-table-column
-          prop="income"
-          label="金额"
-          width="100"
-        />
-        <el-table-column
-          prop="category"
-          label="类别"
-          width="180"
-        />
-        <el-table-column
-          prop="mark"
-          label="备注"
-        />
-        <el-table-column
-          label="操作"
-          width="180"
-        >
+        <el-table-column prop="index" label="#" width="60" />
+        <el-table-column prop="date" label="日期" width="120" />
+        <el-table-column prop="type" label="身份" width="80" />
+        <el-table-column prop="income" label="金额" width="100" />
+        <el-table-column prop="category" label="类别" width="180" />
+        <el-table-column prop="mark" label="备注" />
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row.id)" />
             <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteIncome(scope.row)" />
@@ -132,6 +97,7 @@
 </template>
 
 <script>
+import IncomeApi from '@/api/Income'
 export default {
   name: 'InMoney',
   data() {
@@ -155,20 +121,22 @@ export default {
       }],
       searchModel: {
         pageNo: 1,
-        pageSize: 10
+        pageSize: 10,
+        year: 2024
       },
-      inList: [
-        { index: 1, date: '2024-08-01', type: '父亲', income: 1000, category: '工资', mark: '本月工资', id: 1 },
-        { index: 2, date: '2024-08-02', type: '母亲', income: 500, category: '奖金', mark: '季度奖金', id: 2 },
-        { index: 3, date: '2024-08-03', type: '儿子', income: 300, category: '奖学金', mark: '学校奖学金' },
-        { index: 4, date: '2024-08-04', type: '女儿', income: 200, category: '压岁钱', mark: '春节红包' },
-        { index: 5, date: '2024-08-05', type: '父亲', income: 500, category: '股票', mark: '股市收益' },
-        { index: 6, date: '2024-08-06', type: '母亲', income: 100, category: '兼职', mark: '周末兼职' },
-        { index: 7, date: '2024-08-07', type: '儿子', income: 50, category: '零花钱', mark: '父母给的零花钱' },
-        { index: 8, date: '2024-08-08', type: '女儿', income: 150, category: '演出费', mark: '儿童剧表演费用' },
-        { index: 9, date: '2024-08-09', type: '父亲', income: 200, category: '投资回报', mark: '基金分红' },
-        { index: 10, date: '2024-08-10', type: '母亲', income: 300, category: '稿费', mark: '文章稿酬' }
-      ],
+      inList: [],
+      // inList: [
+      //   { index: 1, date: '2024-08-01', type: '父亲', income: 1000, category: '工资', mark: '本月工资', id: 1 },
+      //   { index: 2, date: '2024-08-02', type: '母亲', income: 500, category: '奖金', mark: '季度奖金', id: 2 },
+      //   { index: 3, date: '2024-08-03', type: '儿子', income: 300, category: '奖学金', mark: '学校奖学金' },
+      //   { index: 4, date: '2024-08-04', type: '女儿', income: 200, category: '压岁钱', mark: '春节红包' },
+      //   { index: 5, date: '2024-08-05', type: '父亲', income: 500, category: '股票', mark: '股市收益' },
+      //   { index: 6, date: '2024-08-06', type: '母亲', income: 100, category: '兼职', mark: '周末兼职' },
+      //   { index: 7, date: '2024-08-07', type: '儿子', income: 50, category: '零花钱', mark: '父母给的零花钱' },
+      //   { index: 8, date: '2024-08-08', type: '女儿', income: 150, category: '演出费', mark: '儿童剧表演费用' },
+      //   { index: 9, date: '2024-08-09', type: '父亲', income: 200, category: '投资回报', mark: '基金分红' },
+      //   { index: 10, date: '2024-08-10', type: '母亲', income: 300, category: '稿费', mark: '文章稿酬' }
+      // ],
       inForm: {},
       props: { // 级联配置
         lazy: true,
@@ -177,7 +145,9 @@ export default {
           setTimeout(() => {
             const nodes = Array.from({ length: level + 1 })
               .map(item => ({
+                // eslint-disable-next-line no-undef
                 value: ++id,
+                // eslint-disable-next-line no-undef
                 label: `选项${id}`,
                 leaf: level >= 2
               }))
@@ -201,11 +171,19 @@ export default {
       }
       this.dialogFormVisible = true
     },
-    handleSizeChange() {
-
+    handleSizeChange(size) {
+      this.searchModel.pageSize = size
+      this.getIncomeList()
     },
-    handleCurrentChange() {
-
+    handleCurrentChange(page) {
+      this.searchModel.pageNo = page
+      this.getIncomeList()
+    },
+    getIncomeList() {
+      IncomeApi.getIncomeList(this.searchModel).then(response => {
+        this.inList = response.data.rows
+        this.total = response.data.total
+      })
     },
     deleteIncome(income) {
       this.$confirm('此操作将删除该记录, 是否继续?', '提示', {
@@ -224,6 +202,9 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    create() {
+      this.getIncomeList()
     }
   }
 }

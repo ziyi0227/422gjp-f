@@ -72,7 +72,7 @@ export default {
   methods: {
     openNewMemberUI() {
       this.dialogTitle = '新建成员'
-      this.clearForm()
+      // this.clearForm()
       this.dialogFormVisible = true
     },
     openEditUI(id) {

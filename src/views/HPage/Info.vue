@@ -53,17 +53,18 @@
 </template>
 
 <script>
-import { userInfo } from '@/api/user.js'
+import { getFamilyInfo } from '@/api/user'
+import {data} from "autoprefixer";
 export default {
   name: 'Info',
   data() {
     return {
       avatar: '',
-      nickname: '422',
+      nickname: '',
       familyNumber: 0,
       id: 0,
-      account: '422',
-      area: '杭州'
+      account: '',
+      area: ''
     }
   },
   mounted() {
@@ -71,14 +72,15 @@ export default {
   },
   methods: {
     load() {
-      userInfo(this.$route.params.id)
+      getFamilyInfo()
         .then((res) => {
-          this.avatar = res.data.avatar
-          this.nickname = res.data.nickname
-          this.familyNumber = res.data.familyNumber
+          this.avatar = res.data.avatarUrl
+          this.nickname = res.data.name
+          this.familyNumber = res.data.memberCount
           this.id = res.data.id
-          this.account = res.data.account
+          this.account = res.data.accountName
           this.area = res.data.area
+          console.log(res)
         })
         .catch((err) => {
           console.log(err)

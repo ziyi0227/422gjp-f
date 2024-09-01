@@ -10,7 +10,7 @@
         <div class="updateinfo">
           <div class="left">
             <el-form-item label="家庭头像" prop="avatar">
-              <img style="width:150px;height:110px" :src="form.avatar">
+              <img style="width:150px;height:110px" :src="form.avatar" alt="pic">
             </el-form-item>
             <el-form-item label="家庭密码" prop="password">
               <el-input v-model="form.password" />
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { HomeInfo, updateInfo } from '@/api/user.js'
+import { getFamilyInfo, updateInfo } from '@/api/user.js'
 
 export default {
   name: 'HomeDia',
@@ -78,8 +78,15 @@ export default {
       this.dialogVisible = true
     },
     load() {
-      HomeInfo(this.$store.state.id)
+      getFamilyInfo()
         .then((res) => {
+          this.form.avatar = res.data.avatarUrl
+          // this.form.password = res.data.password
+          // this.form.nickname = res.data.name
+          // this.form.familyNumber = res.data.memberCount
+          // this.form.id = res.data.id
+          // this.form.account = res.data.accountName
+          // this.form.area = res.data.area
           console.log(res)
           Object.assign(this.form, res.data)
         })
