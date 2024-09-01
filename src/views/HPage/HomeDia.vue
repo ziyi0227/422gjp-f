@@ -81,14 +81,14 @@ export default {
       getFamilyInfo()
         .then((res) => {
           this.form.avatar = res.data.avatarUrl
+          this.form.id = res.data.id
+          this.form.account = res.data.accountName
+          this.form.familyNumber = res.data.memberCount
           // this.form.password = res.data.password
-          // this.form.nickname = res.data.name
-          // this.form.familyNumber = res.data.memberCount
-          // this.form.id = res.data.id
-          // this.form.account = res.data.accountName
+          this.form.nickname = res.data.name
           // this.form.area = res.data.area
-          console.log(res)
-          Object.assign(this.form, res.data)
+          // console.log(res)
+          // Object.assign(this.form, res.data)
         })
         .catch((err) => {
           console.log(err)

@@ -47,14 +47,11 @@
 </template>
 
 <script>
+import { getFamilyUser, addUser, deleteUser, updateUser } from '@/api/user'
 export default {
   data() {
     return {
-      memberList: [
-        { id: 1, name: '张三', type: '家长' },
-        { id: 2, name: '李四', type: '孩子' },
-        { id: 3, name: '王五', type: '家长' }
-      ],
+      memberList: [],
       dialogFormVisible: false,
       dialogTitle: '',
       userForm: {
@@ -63,11 +60,14 @@ export default {
         type: ''
       },
       rules: {
-        id: [{ required: true, message: '请输入成员ID', trigger: 'blur' }],
+        // id: [{ required: true, message: '请输入成员ID', trigger: 'blur' }],
         name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         type: [{ required: true, message: '请输入身份', trigger: 'blur' }]
       }
     }
+  },
+  mounted() {
+    this.load()
   },
   methods: {
     openNewMemberUI() {
@@ -83,28 +83,104 @@ export default {
         this.dialogFormVisible = true
       }
     },
+    // deleteUser(member) {
+    //   this.$confirm(`确定删除成员 ${member.name} 吗？`, '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     this.memberList = this.memberList.filter((item) => item.id !== member.id)
+    //     this.$message({
+    //       type: 'success',
+    //       message: '删除成功!'
+    //     })
+    //   })
+    // },
     deleteUser(member) {
       this.$confirm(`确定删除成员 ${member.name} 吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.memberList = this.memberList.filter((item) => item.id !== member.id)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+        console.log('name', member.id)
+        deleteUser({ id: member.id })
+          .then(() => {
+            this.load()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }).catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+            console.error('删除失败:', err)
+          })
       })
     },
     saveUser() {
+      if (this.userForm.id) {
+        updateUser(this.userForm)
+          .then(() => {
+            this.load()
+            this.$message({
+              type: 'success',
+              message: '更新成功!'
+            })
+            this.dialogFormVisible = false
+            this.clearForm()
+          })
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '更新失败!'
+            })
+            console.error('更新失败:', err)
+          })
+      } else {
+        addUser(this.userForm)
+          .then(() => {
+            this.load()
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            })
+            this.dialogFormVisible = false
+            this.clearForm()
+          })
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '添加失败!'
+            })
+            console.error('添加失败:', err)
+          })
+      }
     },
     clearForm() {
-      this.$refs.userFormRef.resetFields()
+      if (this.$refs.userFormRef) {
+        this.$refs.userFormRef.resetFields()
+      }
       this.userForm = {
         id: '',
         name: '',
         type: ''
       }
+    },
+    load() {
+      getFamilyUser()
+        .then((res) => {
+          // 提取需要的数据
+          this.memberList = res.data.map(item => ({
+            id: item.id,
+            name: item.name,
+            type: item.type
+          }))
+        })
+        .catch((err) => {
+          console.error('加载成员数据失败:', err)
+        })
     }
   }
 }

@@ -29,8 +29,7 @@
           :key="passwordType"
           ref="password"
           v-model="activeForm.password"
-          show-password
-          type="passwordType"
+          :type="passwordType"
           placeholder="密码"
           name="password"
           tabindex="2"
@@ -59,11 +58,11 @@
           @keyup.enter.native="handleLoginOrRegister"
         />
       </el-form-item>
-      <div v-if="!isLoginForm" class="password-confirm-gap"/>
+      <div v-if="!isLoginForm" class="password-confirm-gap" />
       <!-- 确认密码 -->
       <el-form-item v-if="!isLoginForm" prop="rePassword">
         <span class="svg-container">
-          <svg-icon icon-class="password"/>
+          <svg-icon icon-class="password" />
         </span>
         <el-input
           v-model="activeForm.rePassword"
@@ -104,8 +103,7 @@
           tabindex="5"
           auto-complete="on"
           @keyup.enter.native="handleLoginOrRegister"
-        >
-        </el-input>
+        />
       </el-form-item>
 
       <!-- 登录/注册按钮 -->
@@ -129,7 +127,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { Message } from 'element-ui'
-import { login, register } from '@/api/user'
+import { register } from '@/api/user'
 
 export default {
   name: 'LoginAndRegister',
@@ -188,7 +186,7 @@ export default {
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
-        this.passwordType = ''
+        this.passwordType = 'text'
       } else {
         this.passwordType = 'password'
       }

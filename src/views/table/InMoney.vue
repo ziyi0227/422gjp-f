@@ -27,10 +27,10 @@
     <!--结果列表-->
     <el-card>
       <el-table :data="inList" stripe style="width: 100%">
-<!--        <template slot-scope="scope">-->
-          <!--           (pageNo -1 ) * pageSize + index + 1 -->
-<!--          {{ (searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1 }}-->
-<!--        </template>>-->
+        <!--        <template slot-scope="scope">-->
+        <!--           (pageNo -1 ) * pageSize + index + 1 -->
+        <!--          {{ (searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1 }}-->
+        <!--        </template>>-->
         <el-table-column prop="index" label="#" width="60" />
         <el-table-column prop="date" label="日期" width="120" />
         <el-table-column prop="type" label="身份" width="80" />
@@ -158,6 +158,9 @@ export default {
       }
     }
   },
+  created() {
+    this.getIncomeList()
+  },
   methods: {
     clearForm() {
       this.inForm = {}
@@ -181,8 +184,29 @@ export default {
     },
     getIncomeList() {
       IncomeApi.getIncomeList(this.searchModel).then(response => {
-        this.inList = response.data.rows
-        this.total = response.data.total
+
+        this.total = Object.keys(response.data).length
+
+        // 获取键的数量
+        const memberCount = Object.keys(response.data).length
+
+        // 打印数据个数
+        console.log('返回的成员个数:', memberCount)
+        // 处理数据，将其转换为 memberList 所需的格式
+        console.log(response.data)
+        // const data = response.data
+        // this.memberList = Object.keys(data).flatMap(key => {
+        //   return Object.keys(data[key]).map(nestedKey => {
+        //     const member = data[key][nestedKey]
+        //     return {
+        //       id: member.id,
+        //       name: key, // 外层键作为name
+        //       type: member.type || '未知身份' // 从嵌套对象中获取type
+        //     }
+        //   })
+        // })
+      }).catch((err) => {
+        console.error('加载成员数据失败:', err)
       })
     },
     deleteIncome(income) {
@@ -202,9 +226,6 @@ export default {
           message: '已取消删除'
         })
       })
-    },
-    create() {
-      this.getIncomeList()
     }
   }
 }

@@ -11,7 +11,7 @@
       </div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" alt="pic">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -40,6 +40,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ThemePicker from '@/components/ThemePicker'
+import { getFamilyInfo } from '@/api/user'
 
 export default {
   components: {
@@ -47,11 +48,19 @@ export default {
     Hamburger,
     ThemePicker
   },
+  data() {
+    return {
+      avatar: ''
+    }
+  },
   computed: {
     ...mapGetters([
-      'sidebar',
-      'avatar'
+      'sidebar'
     ])
+  },
+  mounted() {
+    this.load()
+    //  TODO: 加一个钩子直接显示信息
   },
   methods: {
     toggleSideBar() {
@@ -60,6 +69,16 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    load() {
+      getFamilyInfo()
+        .then((res) => {
+          this.avatar = res.data.avatarUrl
+          // console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     themeChange(val) {
       this.$store.dispatch('settings/changeSetting', {

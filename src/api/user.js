@@ -41,15 +41,32 @@ export function updateInfo() {
     method: 'post'
   })
 }
-export function deleteUser() {
+export function deleteUser(data) {
   return request({
     url: '/family/deleteUser',
-    method: 'post'
+    method: 'post',
+    data: data
   })
 }
-export function addUser() {
+export function addUser(data) {
   return request({
     url: '/family/addUser',
+    method: 'post',
+    data: data
+  })
+}
+// ==========================================================
+export function updateUser(data) {
+  return request({
+    url: '/family/updateUser',
+    method: 'post',
+    data: data
+  })
+}
+// ==========================================================
+export function getFamilyUser() {
+  return request({
+    url: '/family/getFamilyUser',
     method: 'post'
   })
 }

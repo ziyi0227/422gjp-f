@@ -2,9 +2,9 @@
   <div>
     <el-card>
       <el-descriptions class="margin-top" title="家庭信息" :column="2" border>
-        <template slot="extra">
-          <el-button v-if="$route.params.id==$store.state.id" type="primary" size="small">操作</el-button>
-        </template>
+<!--        <template slot="extra">-->
+<!--          <el-button v-if="$route.params.id==$store.state.id" type="primary" size="small">操作</el-button>-->
+<!--        </template>-->
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-picture-outline" />
@@ -54,7 +54,7 @@
 
 <script>
 import { getFamilyInfo } from '@/api/user'
-import {data} from "autoprefixer";
+// import {data} from "autoprefixer";
 export default {
   name: 'Info',
   data() {
@@ -80,7 +80,7 @@ export default {
           this.id = res.data.id
           this.account = res.data.accountName
           this.area = res.data.area
-          console.log(res)
+          // console.log(res)
         })
         .catch((err) => {
           console.log(err)
