@@ -76,14 +76,14 @@
 
       </el-form-item>
 
-      <el-form-item v-if="!isLoginForm" prop="name">
+      <el-form-item v-if="!isLoginForm" prop="createUserName">
         <span class="svg-container">
           <svg-icon icon-class="name" />
         </span>
         <el-input
-          v-model="activeForm.name"
+          v-model="activeForm.createUserName"
           type="text"
-          placeholder="家庭昵称"
+          placeholder="注册人昵称"
           name="name"
           tabindex="4"
           auto-complete="on"
@@ -92,12 +92,12 @@
 
       </el-form-item>
 
-      <el-form-item v-if="!isLoginForm" prop="userType">
+      <el-form-item v-if="!isLoginForm" prop="createUserType">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          v-model="activeForm.userType"
+          v-model="activeForm.createUserType"
           placeholder="注册人家庭身份"
           name="userType"
           tabindex="5"
@@ -160,8 +160,8 @@ export default {
         username: '',
         password: '',
         rePassword: '',
-        name: '',
-        userType: ''
+        createUserName: '',
+        createUserType: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
