@@ -89,9 +89,42 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="text" size="mini" style="text-align: left;margin-right: 80%" @click="categoryFormVisible = true">没找到类别？>>></el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <!--TODO:上传数据-->
         <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!--  添加类别对话框-->
+    <el-dialog title="新增支出类别" :visible.sync="categoryFormVisible">
+      <el-form :model="categoryForm">
+        <el-form-item label="一级类别" :label-width="formLabelWidth">
+          <el-select
+            v-model="categoryForm.firstCategory"
+            filterable
+            allow-create
+            default-first-option
+            remote
+            placeholder="请选择/创建一级标签"
+            :remote-method="remoteMethod"
+            :loading="categoryLoading"
+          >
+            <el-option
+              v-for="item in categoryOptions"
+              :key="item.categoryValue"
+              :label="item.categoryLabel"
+              :value="item.categoryValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="二级类别" :label-width="formLabelWidth">
+          <el-input v-model="categoryForm.secondCategory" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="categoryFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="categoryFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -105,6 +138,7 @@ export default {
     return {
       formLabelWidth: '110px',
       dialogFormVisible: false,
+      categoryFormVisible: false,
       total: 0,
       title: '',
       options: [{
@@ -124,18 +158,16 @@ export default {
         pageNo: 1,
         pageSize: 10
       },
-      outList: [
-        // { index: 1, date: '2024-08-01', type: '父亲', outcome: 1000, category: '工资', mark: '本月工资', id: 1 },
-        // { index: 2, date: '2024-08-02', type: '母亲', outcome: 500, category: '奖金', mark: '季度奖金', id: 2 },
-        // { index: 3, date: '2024-08-03', type: '儿子', outcome: 300, category: '奖学金', mark: '学校奖学金' },
-        // { index: 4, date: '2024-08-04', type: '女儿', outcome: 200, category: '压岁钱', mark: '春节红包' },
-        // { index: 5, date: '2024-08-05', type: '父亲', outcome: 500, category: '股票', mark: '股市收益' },
-        // { index: 6, date: '2024-08-06', type: '母亲', outcome: 100, category: '兼职', mark: '周末兼职' },
-        // { index: 7, date: '2024-08-07', type: '儿子', outcome: 50, category: '零花钱', mark: '父母给的零花钱' },
-        // { index: 8, date: '2024-08-08', type: '女儿', outcome: 150, category: '演出费', mark: '儿童剧表演费用' },
-        // { index: 9, date: '2024-08-09', type: '父亲', outcome: 200, category: '投资回报', mark: '基金分红' },
-        // { index: 10, date: '2024-08-10', type: '母亲', outcome: 300, category: '稿费', mark: '文章稿酬' }
-      ],
+      categoryForm: {
+        firstCategory: '',
+        secondCategory: ''
+      },
+      categoryOptions: [],
+      categoryValue: [],
+      categoryList: [],
+      categoryLoading: false,
+      categoryStates: [],
+      outList: [],
       outForm: {},
       props: { // 级联配置
         lazy: true,
@@ -159,6 +191,11 @@ export default {
   },
   created() {
     this.getExpenseList()
+  },
+  mounted() {
+    this.categoryList = this.states.map(item => {
+      return { categoryValue: `value:${item}`, categoryLabel: `label:${item}` }
+    })
   },
   methods: {
     clearForm() {
@@ -236,6 +273,20 @@ export default {
 
       // 返回格式为 YYYY-MM-DD HH:mm:ss
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.options = this.list.filter(item => {
+            return item.label.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 200)
+      } else {
+        this.options = []
+      }
     }
   }
 }
