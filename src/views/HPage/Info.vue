@@ -47,6 +47,13 @@
           </template>
           {{ area }}
         </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-location" />
+            预算
+          </template>
+          {{ budget }}
+        </el-descriptions-item>
       </el-descriptions>
     </el-card>
   </div>
@@ -64,7 +71,8 @@ export default {
       familyNumber: 0,
       id: 0,
       account: '',
-      area: ''
+      area: '',
+      budget: ''
     }
   },
   mounted() {
@@ -80,6 +88,7 @@ export default {
           this.id = res.data.id
           this.account = res.data.accountName
           this.area = res.data.area
+          this.budget = res.data.budget
           // console.log(res)
         })
         .catch((err) => {
