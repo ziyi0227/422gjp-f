@@ -55,7 +55,6 @@ export function addUser(data) {
     data: data
   })
 }
-// ==========================================================
 export function updateUser(data) {
   return request({
     url: '/family/updateUser',
@@ -63,10 +62,15 @@ export function updateUser(data) {
     data: data
   })
 }
-// ==========================================================
 export function getFamilyUser() {
   return request({
     url: '/family/getFamilyUser',
+    method: 'post'
+  })
+}
+export function getDashboardInfo() {
+  return request({
+    url: '/family/getDashboardInfo',
     method: 'post'
   })
 }

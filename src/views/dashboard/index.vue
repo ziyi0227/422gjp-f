@@ -4,22 +4,12 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <div>
-            <el-statistic
-              group-separator=","
-              :precision="0"
-              :value="memberNumber"
-              title="家庭人数"
-            />
+            <el-statistic group-separator="," :precision="0" :value="memberCount" title="家庭人数" />
           </div>
         </el-col>
         <el-col :span="8">
           <div>
-            <el-statistic
-              group-separator=","
-              :precision="2"
-              :value="totalMoney"
-              title="家庭净资产"
-            >
+            <el-statistic group-separator="," :precision="2" :value="asset" title="家庭净资产">
               <template slot="prefix">
                 <i class="el-icon-s-flag" style="color: red" />
               </template>
@@ -31,17 +21,9 @@
         </el-col>
         <el-col :span="8">
           <div>
-            <el-statistic
-              group-separator=","
-              :precision="2"
-              :value="increaseMoney"
-              title="本月净资产变动"
-            >
+            <el-statistic group-separator="," :precision="2" :value="totalBalance" title="本月净资产变动">
               <template slot="suffix">
-                <i
-                  class="el-icon-star-on"
-                  style="color:red"
-                />
+                <i class="el-icon-star-on" style="color:red" />
               </template>
             </el-statistic>
           </div>
@@ -71,12 +53,7 @@
           <div slot="header" class="clearfix">
             <span>支出统计</span>
             <el-button style="float: right; padding: 3px 0" type="text" @click="outcomeDrawer">分析></el-button>
-            <el-drawer
-              :title="drawerTitle"
-              :visible.sync="drawer"
-              :direction="direction"
-              :before-close="handleClose"
-            >
+            <el-drawer :title="drawerTitle" :visible.sync="drawer" :direction="direction" :before-close="handleClose">
               <!-- 使用带有滚动条的容器包裹评语内容 -->
               <div class="drawerText">
                 <el-scrollbar style="height: 100%; margin-outside: 3px">
@@ -141,6 +118,7 @@ import NightingaleChart from '@/views/dashboard/NightingaleChart'
 import AccessFrom from '@/views/dashboard/AccessFrom'
 import CircleAccessFrom from '@/views/dashboard/CircleAccessFrom'
 import VueMarkdown from 'vue-markdown'
+import { getDashboardInfo } from '@/api/user'
 
 export default {
   name: 'Dashboard',
@@ -157,9 +135,9 @@ export default {
   },
   data() {
     return {
-      memberNumber: 5,
-      totalMoney: 120000.00,
-      increaseMoney: 5000,
+      memberCount: 5,
+      asset: 120000.00,
+      totalBalance: 5000,
       evaltext: {
         assess: '',
         commend: '111测试**粗**',
@@ -176,6 +154,9 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  mounted() {
+    this.load()
   },
   methods: {
     format(percentage) {
@@ -197,6 +178,16 @@ export default {
       this.drawer = true
       this.drawerType = 'income'
       this.drawerTitle = '收入分析'
+    },
+    load() {
+      getDashboardInfo().then((res) => {
+        console.log(res)
+        this.memberCount = res.data.memberCount
+        this.asset = res.data.asset
+        this.totalBalance = res.data.totalBalance
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

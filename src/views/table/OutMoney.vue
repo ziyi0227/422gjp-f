@@ -27,7 +27,7 @@
     <!--结果列表-->
     <el-card>
       <el-table :data="outList" stripe style="width: 100%">
-        <el-table-column label="#" width="60">
+        <el-table-column label="序号" width="60">
           <template slot-scope="scope">
             {{ (searchModel.pageNo - 1) * searchModel.pageSize + scope.$index + 1 }}
           </template>

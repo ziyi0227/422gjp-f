@@ -2,9 +2,9 @@
   <div>
     <el-card>
       <el-descriptions class="margin-top" title="家庭信息" :column="2" border>
-<!--        <template slot="extra">-->
-<!--          <el-button v-if="$route.params.id==$store.state.id" type="primary" size="small">操作</el-button>-->
-<!--        </template>-->
+        <!--        <template slot="extra">-->
+        <!--          <el-button v-if="$route.params.id==$store.state.id" type="primary" size="small">操作</el-button>-->
+        <!--        </template>-->
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-picture-outline" />
@@ -78,25 +78,22 @@ export default {
   mounted() {
     this.load()
   },
-
   methods: {
     load() {
-      getFamilyInfo()
-        .then((res) => {
-          this.avatar = res.data.avatarUrl
-          this.nickname = res.data.name
-          this.familyNumber = res.data.memberCount
-          this.id = res.data.id
-          this.account = res.data.accountName
-          this.createTime = this.formatDate(res.data.createTime)
-          console.log('createTime', this.createTime)
-          // this.createTime = (res.data.createTime)
-          this.budget = res.data.budget
-          // console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      getFamilyInfo().then((res) => {
+        this.avatar = res.data.avatarUrl
+        this.nickname = res.data.name
+        this.familyNumber = res.data.memberCount
+        this.id = res.data.id
+        this.account = res.data.accountName
+        this.createTime = this.formatDate(res.data.createTime)
+        // console.log('createTime', this.createTime)
+        // this.createTime = (res.data.createTime)
+        this.budget = res.data.budget
+        // console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     formatDate(isoString) {
       const date = new Date(isoString)

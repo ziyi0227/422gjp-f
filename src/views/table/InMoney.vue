@@ -31,7 +31,7 @@
 <!--          (pageNo -1 ) * pageSize + index + 1-->
 <!--          {{ (searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1 }}-->
 <!--        </template>>-->
-        <el-table-column label="#" width="60">
+        <el-table-column label="序号" width="60">
           <template slot-scope="scope">
             {{ (searchModel.pageNo - 1) * searchModel.pageSize + scope.$index + 1 }}
           </template>
@@ -201,8 +201,7 @@ export default {
             })
             this.dialogFormVisible = false
             this.clearForm()
-          })
-          .catch((err) => {
+          }).catch((err) => {
             this.$message({
               type: 'error',
               message: '更新失败!'
@@ -219,8 +218,7 @@ export default {
             })
             this.dialogFormVisible = false
             this.clearForm()
-          })
-          .catch((err) => {
+          }).catch((err) => {
             this.$message({
               type: 'error',
               message: '添加失败!'
