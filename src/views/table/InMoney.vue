@@ -148,6 +148,15 @@ export default {
       }, {
         value: '女儿',
         label: '女儿'
+      }, {
+        value: '爷爷',
+        label: '爷爷'
+      }, {
+        value: '奶奶',
+        label: '奶奶'
+      }, {
+        value: '外公',
+        label: '外婆'
       }],
       searchModel: {
         pageNo: 1,
@@ -207,6 +216,8 @@ export default {
     openNewMemberUI() {
       this.dialogTitle = '新建成员'
       this.clearForm()
+      // this.inForm.incomeTime = new Date(this.inForm.incomeTime).toISOString().slice(0, 19)
+      console.log('inForm', this.inForm)
       this.dialogFormVisible = true
     },
     openEditUI(id) {
@@ -214,10 +225,10 @@ export default {
 
       if (member) {
         // 假设 member.incomeTime 是一个字符串，首先创建一个 Date 对象
-        const date = new Date(member.incomeTime);
+        const date = new Date(member.incomeTime)
 
         // 将日期格式化为 ISO 8601 格式（去掉毫秒部分），这通常是后端期望的格式
-        const formattedIncomeTime = date.toISOString().slice(0, 19);
+        const formattedIncomeTime = date.toISOString().slice(0, 19)
         this.dialogTitle = '编辑成员'
         this.inForm = {
           id: member.id,
@@ -243,8 +254,7 @@ export default {
             this.dialogFormVisible = false
             this.clearForm()
             this.getIncomeList()
-          })
-          .catch((err) => {
+          }).catch((err) => {
             this.$message({
               type: 'error',
               message: '更新失败!'
@@ -254,15 +264,14 @@ export default {
       } else {
         IncomeApi.addIncome(this.inForm)
           .then(() => {
-            this.created()
             this.$message({
               type: 'success',
               message: '添加成功!'
             })
             this.dialogFormVisible = false
             this.clearForm()
-          })
-          .catch((err) => {
+            this.getIncomeList()
+          }).catch((err) => {
             this.$message({
               type: 'error',
               message: '添加失败!'
