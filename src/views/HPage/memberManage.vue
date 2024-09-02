@@ -102,7 +102,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log('name', member.id)
         deleteUser({ id: member.id })
           .then(() => {
             this.load()

@@ -29,9 +29,6 @@
             <el-form-item label="家庭账号" prop="account">
               <el-input v-model="form.account" disabled />
             </el-form-item>
-            <el-form-item label="所在地区" prop="area">
-              <el-input v-model="form.area" />
-            </el-form-item>
           </div>
         </div>
       </el-form>
@@ -57,8 +54,7 @@ export default {
         nickname: '',
         familyNumber: Number,
         id: Number,
-        account: '',
-        area: ''
+        account: ''
       },
       rules: {
         nickname: [

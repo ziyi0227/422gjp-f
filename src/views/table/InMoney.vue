@@ -4,14 +4,14 @@
     <el-card>
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
-        <el-select v-model="searchModel.member" multiple placeholder="请选择">
+        <el-select v-model="inForm.type" multiple placeholder="请选择">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
       <el-col :span="15">
         <el-date-picker
-          v-model="searchModel.date"
-          type="daterange"
+          v-model="inForm.incomeTime"
+          type="dateRange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -21,26 +21,31 @@
         <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI(null)" />
+        <el-button type="primary" icon="el-icon-plus" circle @click="openNewMemberUI()" />
       </el-col>
     </el-card>
     <!--结果列表-->
     <el-card>
       <el-table :data="inList" stripe style="width: 100%">
-        <!--        <template slot-scope="scope">-->
-        <!--           (pageNo -1 ) * pageSize + index + 1 -->
-        <!--          {{ (searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1 }}-->
-        <!--        </template>>-->
-        <el-table-column prop="index" label="#" width="60" />
-        <el-table-column prop="date" label="日期" width="120" />
-        <el-table-column prop="type" label="身份" width="80" />
-        <el-table-column prop="income" label="金额" width="100" />
-        <el-table-column prop="category" label="类别" width="180" />
-        <el-table-column prop="mark" label="备注" />
+<!--        <template slot-scope="scope">-->
+<!--          (pageNo -1 ) * pageSize + index + 1-->
+<!--          {{ (searchModel.pageNo-1) * searchModel.pageSize + scope.$index + 1 }}-->
+<!--        </template>>-->
+        <el-table-column label="#" width="60">
+          <template slot-scope="scope">
+            {{ (searchModel.pageNo - 1) * searchModel.pageSize + scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="id" label="id" width="100" />
+        <el-table-column prop="incomeTime" label="日期" width="200" />
+        <el-table-column prop="type" label="身份" width="100" />
+        <el-table-column prop="amount" label="金额" width="150" />
+        <el-table-column prop="categoryName" label="类别" width="180" />
+        <el-table-column prop="remark" label="备注" />
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row.id)" />
-            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteIncome(scope.row)" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteIncomeByID(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
@@ -58,39 +63,30 @@
     />
 
     <!--  用户信息编辑对话框-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close="clearForm">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="inForm">
         <el-form-item label="日期" :label-width="formLabelWidth">
-          <el-date-picker
-            v-model="inForm.date"
-            type="date"
-            placeholder="选择日期"
-          />
+          <el-date-picker v-model="inForm.incomeTime" type="date" placeholder="选择日期" />
         </el-form-item>
         <el-form-item label="身份" :label-width="formLabelWidth">
-          <el-select v-model="inForm.type" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <el-select v-model="inForm.type">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="金额" :label-width="formLabelWidth">
-          <el-input v-model="inForm.income" autocomplete="off" />
+          <el-input v-model="inForm.amount" autocomplete="off" />
         </el-form-item>
         <el-form-item label="类别" :label-width="formLabelWidth">
-          <el-cascader v-model="inForm.category" :props="props" />
+          <el-input v-model="inForm.categoryName" />
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="inForm.mark" type="textarea" />
+          <el-input v-model="inForm.remark" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <!--TODO:上传数据-->
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveIncomeList">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -104,8 +100,8 @@ export default {
     return {
       formLabelWidth: '110px',
       dialogFormVisible: false,
+      dialogTitle: '',
       total: 0,
-      title: '',
       options: [{
         value: '选项1',
         label: '父亲'
@@ -121,8 +117,7 @@ export default {
       }],
       searchModel: {
         pageNo: 1,
-        pageSize: 10,
-        year: 2024
+        pageSize: 10
       },
       inList: [],
       // inList: [
@@ -137,25 +132,32 @@ export default {
       //   { index: 9, date: '2024-08-09', type: '父亲', income: 200, category: '投资回报', mark: '基金分红' },
       //   { index: 10, date: '2024-08-10', type: '母亲', income: 300, category: '稿费', mark: '文章稿酬' }
       // ],
-      inForm: {},
-      props: { // 级联配置
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const { level } = node
-          setTimeout(() => {
-            const nodes = Array.from({ length: level + 1 })
-              .map(item => ({
-                // eslint-disable-next-line no-undef
-                value: ++id,
-                // eslint-disable-next-line no-undef
-                label: `选项${id}`,
-                leaf: level >= 2
-              }))
-            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-            resolve(nodes)
-          }, 1000)
-        }
+      inForm: {
+        id: '',
+        incomeTime: '',
+        type: '',
+        amount: '',
+        categoryName: '',
+        remark: ''
       }
+      // props: { // 级联配置
+      //   lazy: true,
+      //   lazyLoad(node, resolve) {
+      //     const { level } = node
+      //     setTimeout(() => {
+      //       const nodes = Array.from({ length: level + 1 })
+      //         .map(item => ({
+      //           // eslint-disable-next-line no-undef
+      //           value: ++id,
+      //           // eslint-disable-next-line no-undef
+      //           label: `选项${id}`,
+      //           leaf: level >= 2
+      //         }))
+      //       // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+      //       resolve(nodes)
+      //     }, 1000)
+      //   }
+      // }
     }
   },
   created() {
@@ -165,15 +167,78 @@ export default {
     clearForm() {
       this.inForm = {}
     },
-    openEditUI(id) {
-      if (id == null) {
-        this.title = '新增收入记录'
-      } else {
-        this.title = '修改收入记录'
-        // TODO：根据id查询用户数据
-      }
+
+    openNewMemberUI() {
+      this.dialogTitle = '新建成员'
+      this.clearForm()
       this.dialogFormVisible = true
     },
+    openEditUI(id) {
+      const member = this.inList.find((item) => item.id === id)
+      if (member) {
+        this.dialogTitle = '编辑成员'
+        this.inForm = {
+          id: member.id,
+          incomeTime: member.incomeTime,
+          type: member.type,
+          amount: member.amount,
+          categoryName: member.categoryName,
+          remark: member.remark
+        }
+      }
+      // this.clearForm()
+      // console.log('this.inForm', this.inForm)
+      this.dialogFormVisible = true
+    },
+    saveIncomeList() {
+      if (this.inForm.id) {
+        IncomeApi.updateIncome(this.inForm)
+          .then(() => {
+            this.created()
+            this.$message({
+              type: 'success',
+              message: '更新成功!'
+            })
+            this.dialogFormVisible = false
+            this.clearForm()
+          })
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '更新失败!'
+            })
+            console.error('更新失败:', err)
+          })
+      } else {
+        IncomeApi.addIncome(this.inForm)
+          .then(() => {
+            this.created()
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            })
+            this.dialogFormVisible = false
+            this.clearForm()
+          })
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '添加失败!'
+            })
+            console.error('添加失败:', err)
+          })
+      }
+    },
+    // openEditUI(id) {
+    //   if (id == null) {
+    //     this.title = '新增收入记录'
+    //     // IncomeApi.addIncome(){}
+    //   } else {
+    //     this.title = '修改收入记录'
+    //     // TODO：根据id查询用户数据
+    //   }
+    //   this.dialogFormVisible = true
+    // },
     handleSizeChange(size) {
       this.searchModel.pageSize = size
       this.getIncomeList()
@@ -184,41 +249,42 @@ export default {
     },
     getIncomeList() {
       IncomeApi.getIncomeList(this.searchModel).then(response => {
-
-        this.total = Object.keys(response.data).length
-
-        // 获取键的数量
-        const memberCount = Object.keys(response.data).length
-
-        // 打印数据个数
-        console.log('返回的成员个数:', memberCount)
-        // 处理数据，将其转换为 memberList 所需的格式
-        console.log(response.data)
-        // const data = response.data
-        // this.memberList = Object.keys(data).flatMap(key => {
-        //   return Object.keys(data[key]).map(nestedKey => {
-        //     const member = data[key][nestedKey]
-        //     return {
-        //       id: member.id,
-        //       name: key, // 外层键作为name
-        //       type: member.type || '未知身份' // 从嵌套对象中获取type
-        //     }
-        //   })
-        // })
+        // console.log(response)
+        // this.searchModel.pageNo = response.data.current
+        // this.searchModel.pageSize = response.data.pages
+        this.total = response.data.total
+        // this.total = Object.keys(response.data).length
+        // console.log(response.data)
+        // 提取需要的数据
+        this.inList = response.data.records.map(item => ({
+          id: item.id,
+          incomeTime: this.formatDate(item.incomeTime),
+          type: item.type,
+          amount: item.amount,
+          categoryName: item.categoryName,
+          remark: item.remark
+        }))
       }).catch((err) => {
         console.error('加载成员数据失败:', err)
       })
     },
-    deleteIncome(income) {
+
+    deleteIncomeByID(income) {
+      // console.log(income)
       this.$confirm('此操作将删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         // TODO：删除逻辑
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        IncomeApi.deleteIncomeByID(income.id).then(() => {
+          this.getIncomeList()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch((err) => {
+          console.error('删除成员数据失败:', err)
         })
       }).catch(() => {
         this.$message({
@@ -226,6 +292,18 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    formatDate(isoString) {
+      const date = new Date(isoString)
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0') // 月份从 0 开始，所以要加 1
+      const day = String(date.getDate()).padStart(2, '0')
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const seconds = String(date.getSeconds()).padStart(2, '0')
+
+      // 返回格式为 YYYY-MM-DD HH:mm:ss
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
   }
 }

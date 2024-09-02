@@ -5,12 +5,7 @@
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
         <el-select v-model="searchModel.member" multiple placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
       <el-col :span="15">
@@ -31,47 +26,22 @@
     </el-card>
     <!--结果列表-->
     <el-card>
-      <el-table
-        :data="outList"
-        stripe
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="index"
-          label="#"
-          width="60"
-        />
-        <el-table-column
-          prop="date"
-          label="日期"
-          width="120"
-        />
-        <el-table-column
-          prop="type"
-          label="身份"
-          width="80"
-        />
-        <el-table-column
-          prop="outcome"
-          label="金额"
-          width="100"
-        />
-        <el-table-column
-          prop="category"
-          label="类别"
-          width="180"
-        />
-        <el-table-column
-          prop="mark"
-          label="备注"
-        />
-        <el-table-column
-          label="操作"
-          width="180"
-        >
+      <el-table :data="outList" stripe style="width: 100%">
+        <el-table-column label="#" width="60">
+          <template slot-scope="scope">
+            {{ (searchModel.pageNo - 1) * searchModel.pageSize + scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="id" label="id" width="100" />
+        <el-table-column prop="expenseTime" label="日期" width="200" />
+        <el-table-column prop="type" label="身份" width="100" />
+        <el-table-column prop="amount" label="金额" width="150" />
+        <el-table-column prop="categoryName" label="类别" width="180" />
+        <el-table-column prop="remark" label="备注" />
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row.id)" />
-            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteOutcome(scope.row)" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteExpenseByID(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
@@ -93,7 +63,7 @@
       <el-form :model="outForm">
         <el-form-item label="日期" :label-width="formLabelWidth">
           <el-date-picker
-            v-model="outForm.date"
+            v-model="outForm.expenseTime"
             type="date"
             placeholder="选择日期"
           />
@@ -109,13 +79,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="金额" :label-width="formLabelWidth">
-          <el-input v-model="outForm.outcome" autocomplete="off" />
+          <el-input v-model="outForm.amount" autocomplete="off" />
         </el-form-item>
         <el-form-item label="类别" :label-width="formLabelWidth">
-          <el-cascader v-model="outForm.category" :props="props" />
+          <el-cascader v-model="outForm.categoryName" :props="props" />
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="outForm.mark" type="textarea" />
+          <el-input v-model="outForm.remark" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -128,6 +98,7 @@
 </template>
 
 <script>
+import ExpenseApi from '@/api/expense'
 export default {
   name: 'OutMoney',
   data() {
@@ -154,16 +125,16 @@ export default {
         pageSize: 10
       },
       outList: [
-        { index: 1, date: '2024-08-01', type: '父亲', outcome: 1000, category: '工资', mark: '本月工资', id: 1 },
-        { index: 2, date: '2024-08-02', type: '母亲', outcome: 500, category: '奖金', mark: '季度奖金', id: 2 },
-        { index: 3, date: '2024-08-03', type: '儿子', outcome: 300, category: '奖学金', mark: '学校奖学金' },
-        { index: 4, date: '2024-08-04', type: '女儿', outcome: 200, category: '压岁钱', mark: '春节红包' },
-        { index: 5, date: '2024-08-05', type: '父亲', outcome: 500, category: '股票', mark: '股市收益' },
-        { index: 6, date: '2024-08-06', type: '母亲', outcome: 100, category: '兼职', mark: '周末兼职' },
-        { index: 7, date: '2024-08-07', type: '儿子', outcome: 50, category: '零花钱', mark: '父母给的零花钱' },
-        { index: 8, date: '2024-08-08', type: '女儿', outcome: 150, category: '演出费', mark: '儿童剧表演费用' },
-        { index: 9, date: '2024-08-09', type: '父亲', outcome: 200, category: '投资回报', mark: '基金分红' },
-        { index: 10, date: '2024-08-10', type: '母亲', outcome: 300, category: '稿费', mark: '文章稿酬' }
+        // { index: 1, date: '2024-08-01', type: '父亲', outcome: 1000, category: '工资', mark: '本月工资', id: 1 },
+        // { index: 2, date: '2024-08-02', type: '母亲', outcome: 500, category: '奖金', mark: '季度奖金', id: 2 },
+        // { index: 3, date: '2024-08-03', type: '儿子', outcome: 300, category: '奖学金', mark: '学校奖学金' },
+        // { index: 4, date: '2024-08-04', type: '女儿', outcome: 200, category: '压岁钱', mark: '春节红包' },
+        // { index: 5, date: '2024-08-05', type: '父亲', outcome: 500, category: '股票', mark: '股市收益' },
+        // { index: 6, date: '2024-08-06', type: '母亲', outcome: 100, category: '兼职', mark: '周末兼职' },
+        // { index: 7, date: '2024-08-07', type: '儿子', outcome: 50, category: '零花钱', mark: '父母给的零花钱' },
+        // { index: 8, date: '2024-08-08', type: '女儿', outcome: 150, category: '演出费', mark: '儿童剧表演费用' },
+        // { index: 9, date: '2024-08-09', type: '父亲', outcome: 200, category: '投资回报', mark: '基金分红' },
+        // { index: 10, date: '2024-08-10', type: '母亲', outcome: 300, category: '稿费', mark: '文章稿酬' }
       ],
       outForm: {},
       props: { // 级联配置
@@ -173,7 +144,9 @@ export default {
           setTimeout(() => {
             const nodes = Array.from({ length: level + 1 })
               .map(item => ({
+                // eslint-disable-next-line no-undef
                 value: ++id,
+                // eslint-disable-next-line no-undef
                 label: `选项${id}`,
                 leaf: level >= 2
               }))
@@ -183,6 +156,9 @@ export default {
         }
       }
     }
+  },
+  created() {
+    this.getExpenseList()
   },
   methods: {
     clearForm() {
@@ -197,22 +173,30 @@ export default {
       }
       this.dialogFormVisible = true
     },
-    handleSizeChange() {
-
+    handleSizeChange(size) {
+      this.searchModel.pageSize = size
+      this.getExpenseList()
     },
-    handleCurrentChange() {
-
+    handleCurrentChange(page) {
+      this.searchModel.pageNo = page
+      this.getExpenseList()
     },
-    deleteOutcome(outcome) {
+    deleteExpenseByID(outcome) {
       this.$confirm('此操作将删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        console.log(outcome.id)
         // TODO：删除逻辑
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        ExpenseApi.deleteExpenseByID(outcome.id).then(() => {
+          this.getExpenseList()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch((err) => {
+          console.error('删除成员数据失败:', err)
         })
       }).catch(() => {
         this.$message({
@@ -220,6 +204,38 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    getExpenseList() {
+      ExpenseApi.getExpenseList(this.searchModel).then(response => {
+        // this.searchModel.pageNo = response.data.current
+        // this.searchModel.pageSize = response.data.pages
+        this.total = response.data.total
+        // this.total = Object.keys(response.data).length
+        // console.log(response.data)
+        // 提取需要的数据
+        this.outList = response.data.records.map(item => ({
+          id: item.id,
+          expenseTime: this.formatDate(item.expenseTime),
+          type: item.type,
+          amount: item.amount,
+          categoryName: item.categoryName,
+          remark: item.remark
+        }))
+      }).catch((err) => {
+        console.error('加载成员数据失败:', err)
+      })
+    },
+    formatDate(isoString) {
+      const date = new Date(isoString)
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0') // 月份从 0 开始，所以要加 1
+      const day = String(date.getDate()).padStart(2, '0')
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const seconds = String(date.getSeconds()).padStart(2, '0')
+
+      // 返回格式为 YYYY-MM-DD HH:mm:ss
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
   }
 }

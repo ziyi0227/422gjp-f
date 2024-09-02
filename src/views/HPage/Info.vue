@@ -43,9 +43,9 @@
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-location" />
-            所在地区
+            创建时间
           </template>
-          {{ area }}
+          {{ createTime }}
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
@@ -64,7 +64,7 @@ export default {
       familyNumber: 0,
       id: 0,
       account: '',
-      area: ''
+      createTime: ''
     }
   },
   mounted() {
@@ -79,12 +79,24 @@ export default {
           this.familyNumber = res.data.memberCount
           this.id = res.data.id
           this.account = res.data.accountName
-          this.area = res.data.area
+          this.createTime = this.formatDate(res.data.createTime)
           // console.log(res)
         })
         .catch((err) => {
           console.log(err)
         })
+    },
+    formatDate(isoString) {
+      const date = new Date(isoString)
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0') // 月份从 0 开始，所以要加 1
+      const day = String(date.getDate()).padStart(2, '0')
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const seconds = String(date.getSeconds()).padStart(2, '0')
+
+      // 返回格式为 YYYY-MM-DD HH:mm:ss
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
   }
 }
