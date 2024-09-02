@@ -4,7 +4,7 @@
     <el-card>
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
-        <el-select v-model="inForm.type" multiple placeholder="请选择">
+        <el-select v-model="inForm.userType" multiple placeholder="请选择">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column prop="id" label="id" width="100" />
         <el-table-column prop="incomeTime" label="日期" width="200" />
-        <el-table-column prop="type" label="身份" width="100" />
+        <el-table-column prop="userType" label="身份" width="100" />
         <el-table-column prop="amount" label="金额" width="150" />
         <el-table-column prop="categoryName" label="类别" width="180" />
         <el-table-column prop="remark" label="备注" />
@@ -69,7 +69,7 @@
           <el-date-picker v-model="inForm.incomeTime" type="date" placeholder="选择日期" />
         </el-form-item>
         <el-form-item label="身份" :label-width="formLabelWidth">
-          <el-select v-model="inForm.type">
+          <el-select v-model="inForm.userType">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -137,16 +137,16 @@ export default {
       dialogTitle: '',
       total: 0,
       options: [{
-        value: '选项1',
+        value: '父亲',
         label: '父亲'
       }, {
-        value: '选项2',
+        value: '母亲',
         label: '母亲'
       }, {
-        value: '选项3',
+        value: '儿子',
         label: '儿子'
       }, {
-        value: '选项4',
+        value: '女儿',
         label: '女儿'
       }],
       searchModel: {
@@ -166,7 +166,7 @@ export default {
       inForm: {
         id: '',
         incomeTime: '',
-        type: '',
+        userType: '',
         amount: '',
         categoryName: '',
         remark: ''
@@ -211,12 +211,18 @@ export default {
     },
     openEditUI(id) {
       const member = this.inList.find((item) => item.id === id)
+
       if (member) {
+        // 假设 member.incomeTime 是一个字符串，首先创建一个 Date 对象
+        const date = new Date(member.incomeTime);
+
+        // 将日期格式化为 ISO 8601 格式（去掉毫秒部分），这通常是后端期望的格式
+        const formattedIncomeTime = date.toISOString().slice(0, 19);
         this.dialogTitle = '编辑成员'
         this.inForm = {
           id: member.id,
-          incomeTime: member.incomeTime,
-          type: member.type,
+          incomeTime: formattedIncomeTime,
+          userType: member.userType,
           amount: member.amount,
           categoryName: member.categoryName,
           remark: member.remark
@@ -230,13 +236,13 @@ export default {
       if (this.inForm.id) {
         IncomeApi.updateIncome(this.inForm)
           .then(() => {
-            this.created()
             this.$message({
               type: 'success',
               message: '更新成功!'
             })
             this.dialogFormVisible = false
             this.clearForm()
+            this.getIncomeList()
           })
           .catch((err) => {
             this.$message({
@@ -295,7 +301,7 @@ export default {
         this.inList = response.data.records.map(item => ({
           id: item.id,
           incomeTime: this.formatDate(item.incomeTime),
-          type: item.type,
+          userType: item.type,
           amount: item.amount,
           categoryName: item.categoryName,
           remark: item.remark

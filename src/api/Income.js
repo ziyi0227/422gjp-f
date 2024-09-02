@@ -27,7 +27,7 @@ export default {
   },
   updateIncome(data) {
     return request({
-      url: '/income/add',
+      url: '/income/update',
       method: 'post',
       data: data
     })
