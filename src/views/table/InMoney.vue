@@ -4,7 +4,7 @@
     <el-card>
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
-        <el-select v-model="inForm.userType" multiple placeholder="请选择">
+        <el-select v-model="inForm.userType" placeholder="请选择">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
@@ -266,12 +266,12 @@ export default {
             this.clearForm()
             this.getIncomeList()
           }).catch((err) => {
-            this.$message({
-              type: 'error',
-              message: '更新失败!'
-            })
-            console.error('更新失败:', err)
+          this.$message({
+            type: 'error',
+            message: '更新失败!'
           })
+          console.error('更新失败:', err)
+        })
       } else {
         this.inForm.incomeTime = new Date(this.inForm.incomeTime).toISOString().slice(0, 19)
         IncomeApi.addIncome(this.inForm)
@@ -284,12 +284,12 @@ export default {
             this.clearForm()
             this.getIncomeList()
           }).catch((err) => {
-            this.$message({
-              type: 'error',
-              message: '添加失败!'
-            })
-            console.error('添加失败:', err)
+          this.$message({
+            type: 'error',
+            message: '添加失败!'
           })
+          console.error('添加失败:', err)
+        })
       }
     },
     dateOptions(time) {
@@ -358,13 +358,40 @@ export default {
         })
       })
     },
-    selectIncome(userTypes, startDate, endDate) {
-      console.log('Selected User Types:', userTypes)
+    selectIncome(userType, startDate, endDate) {
+      console.log('Selected User Types:', userType)
       console.log('Start Date:', startDate)
       console.log('End Date:', endDate)
-      // 在这里调用接口，并传递参数
-      // 例如：this.fetchIncomeData(userTypes, startDate, endDate)
+
+      // 转化日期为 ISO 格式
+      // if(startDate != null || endDate != null){
+        const startTime = new Date(startDate).toISOString().slice(0, 19)
+        const endTime = new Date(endDate).toISOString().slice(0, 19)
+      // }
+
+
+      // 调用接口，并传递参数
+      IncomeApi.selectIncome({
+        userType: userType,
+        startTime: startTime,
+        endTime: endTime
+      }).then(response => {
+        console.log(response)
+        this.inList = []
+        this.inList = response.data.map(item => ({
+          id: item.id,
+          incomeTime: this.formatDate(item.incomeTime),
+          userType: item.type,
+          amount: item.amount,
+          categoryName: item.categoryName,
+          remark: item.remark
+        }))
+        this.total = this.inList.length
+      }).catch((err) => {
+        console.error('查询收入数据失败:', err)
+      })
     },
+
     formatDate(isoString) {
       const date = new Date(isoString)
       const year = date.getFullYear()
