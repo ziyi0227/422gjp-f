@@ -15,13 +15,22 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :picker-options="{disabledDate:dateOptions}"
         />
       </el-col>
       <el-col :span="3">
-        <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
+        <el-button
+          type="primary"
+          round
+          icon="el-icon-search"
+          style="margin-left: 20px;"
+          @click="selectIncome(inForm.userType, inForm.incomeTime[0], inForm.incomeTime[1])"
+        >
+          查询
+        </el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" icon="el-icon-plus" circle @click="openNewMemberUI()" />
+        <el-button type="primary" icon="el-icon-plus" circle @click="openNewIncomeUI()" />
       </el-col>
     </el-card>
     <!--结果列表-->
@@ -66,7 +75,12 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" @close="clearForm">
       <el-form :model="inForm">
         <el-form-item label="日期" :label-width="formLabelWidth">
-          <el-date-picker v-model="inForm.incomeTime" type="date" placeholder="选择日期" />
+          <el-date-picker
+            v-model="inForm.incomeTime"
+            type="date"
+            placeholder="选择日期"
+            :picker-options="{disabledDate:dateOptions}"
+          />
         </el-form-item>
         <el-form-item label="身份" :label-width="formLabelWidth">
           <el-select v-model="inForm.userType">
@@ -212,24 +226,21 @@ export default {
     clearForm() {
       this.inForm = {}
     },
-
-    openNewMemberUI() {
-      this.dialogTitle = '新建成员'
+    openNewIncomeUI() {
+      this.dialogTitle = '新建收入'
       this.clearForm()
       // this.inForm.incomeTime = new Date(this.inForm.incomeTime).toISOString().slice(0, 19)
-      console.log('inForm', this.inForm)
+      // console.log('inForm', this.inForm)
       this.dialogFormVisible = true
     },
     openEditUI(id) {
       const member = this.inList.find((item) => item.id === id)
-
       if (member) {
         // 假设 member.incomeTime 是一个字符串，首先创建一个 Date 对象
         const date = new Date(member.incomeTime)
-
         // 将日期格式化为 ISO 8601 格式（去掉毫秒部分），这通常是后端期望的格式
         const formattedIncomeTime = date.toISOString().slice(0, 19)
-        this.dialogTitle = '编辑成员'
+        this.dialogTitle = '编辑收入'
         this.inForm = {
           id: member.id,
           incomeTime: formattedIncomeTime,
@@ -262,6 +273,7 @@ export default {
             console.error('更新失败:', err)
           })
       } else {
+        this.inForm.incomeTime = new Date(this.inForm.incomeTime).toISOString().slice(0, 19)
         IncomeApi.addIncome(this.inForm)
           .then(() => {
             this.$message({
@@ -279,6 +291,9 @@ export default {
             console.error('添加失败:', err)
           })
       }
+    },
+    dateOptions(time) {
+      return time.getTime() > Date.now() - 8.64e6
     },
     // openEditUI(id) {
     //   if (id == null) {
@@ -319,7 +334,6 @@ export default {
         console.error('加载成员数据失败:', err)
       })
     },
-
     deleteIncomeByID(income) {
       // console.log(income)
       this.$confirm('此操作将删除该记录, 是否继续?', '提示', {
@@ -343,6 +357,13 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    selectIncome(userTypes, startDate, endDate) {
+      console.log('Selected User Types:', userTypes)
+      console.log('Start Date:', startDate)
+      console.log('End Date:', endDate)
+      // 在这里调用接口，并传递参数
+      // 例如：this.fetchIncomeData(userTypes, startDate, endDate)
     },
     formatDate(isoString) {
       const date = new Date(isoString)

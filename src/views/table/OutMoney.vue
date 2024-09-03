@@ -15,13 +15,14 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :picker-options="{disabledDate:dateOptions}"
         />
       </el-col>
       <el-col :span="3">
         <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI(null)" />
+        <el-button type="primary" icon="el-icon-plus" circle @click="openNewExpenseUI()" />
       </el-col>
     </el-card>
     <!--结果列表-->
@@ -34,7 +35,7 @@
         </el-table-column>
         <el-table-column prop="id" label="id" width="100" />
         <el-table-column prop="expenseTime" label="日期" width="200" />
-        <el-table-column prop="type" label="身份" width="100" />
+        <el-table-column prop="userType" label="身份" width="100" />
         <el-table-column prop="amount" label="金额" width="150" />
         <el-table-column prop="categoryName" label="类别" width="180" />
         <el-table-column prop="remark" label="备注" />
@@ -66,10 +67,11 @@
             v-model="outForm.expenseTime"
             type="date"
             placeholder="选择日期"
+            :picker-options="{disabledDate:dateOptions}"
           />
         </el-form-item>
         <el-form-item label="身份" :label-width="formLabelWidth">
-          <el-select v-model="outForm.type" placeholder="请选择">
+          <el-select v-model="outForm.userType" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -82,7 +84,8 @@
           <el-input v-model="outForm.amount" autocomplete="off" />
         </el-form-item>
         <el-form-item label="类别" :label-width="formLabelWidth">
-          <el-cascader v-model="outForm.categoryName" :props="props" />
+<!--          <el-cascader v-model="outForm.categoryName" :props="props" />-->
+          <el-input v-model="outForm.categoryName" :props="props" />
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="outForm.remark" type="textarea" />
@@ -92,7 +95,7 @@
         <el-button type="text" size="mini" style="text-align: left;margin-right: 80%" @click="categoryFormVisible = true">没找到类别？>>></el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <!--TODO:上传数据-->
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveExpenseList">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -136,22 +139,22 @@ export default {
   name: 'OutMoney',
   data() {
     return {
-      formLabelWidth: '110px',
+      formLabelWidth: '90px',
       dialogFormVisible: false,
       categoryFormVisible: false,
       total: 0,
       title: '',
       options: [{
-        value: '选项1',
+        value: '父亲',
         label: '父亲'
       }, {
-        value: '选项2',
+        value: '母亲',
         label: '母亲'
       }, {
-        value: '选项3',
+        value: '儿子',
         label: '儿子'
       }, {
-        value: '选项4',
+        value: '女儿',
         label: '女儿'
       }],
       searchModel: {
@@ -168,25 +171,32 @@ export default {
       categoryLoading: false,
       categoryStates: [],
       outList: [],
-      outForm: {},
-      props: { // 级联配置
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const { level } = node
-          setTimeout(() => {
-            const nodes = Array.from({ length: level + 1 })
-              .map(item => ({
-                // eslint-disable-next-line no-undef
-                value: ++id,
-                // eslint-disable-next-line no-undef
-                label: `选项${id}`,
-                leaf: level >= 2
-              }))
-            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-            resolve(nodes)
-          }, 1000)
-        }
+      outForm: {
+        id: '',
+        expenseTime: '',
+        userType: '',
+        amount: '',
+        categoryName: '',
+        remark: ''
       }
+      // props: { // 级联配置
+      //   lazy: true,
+      //   lazyLoad(node, resolve) {
+      //     const { level } = node
+      //     setTimeout(() => {
+      //       const nodes = Array.from({ length: level + 1 })
+      //         .map(item => ({
+      //           // eslint-disable-next-line no-undef
+      //           value: ++id,
+      //           // eslint-disable-next-line no-undef
+      //           label: `选项${id}`,
+      //           leaf: level >= 2
+      //         }))
+      //       // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+      //       resolve(nodes)
+      //     }, 1000)
+      //   }
+      // }
     }
   },
   created() {
@@ -201,15 +211,79 @@ export default {
     clearForm() {
       this.outForm = {}
     },
-    openEditUI(id) {
-      if (id == null) {
-        this.title = '新增支出记录'
-      } else {
-        this.title = '修改支出记录'
-        // TODO：根据id查询用户数据
-      }
+    openNewExpenseUI() {
+      this.dialogTitle = '新建支出'
+      this.clearForm()
+      // this.inForm.incomeTime = new Date(this.inForm.incomeTime).toISOString().slice(0, 19)
+      // console.log('outForm', this.outForm)
       this.dialogFormVisible = true
     },
+    openEditUI(id) {
+      const member = this.outList.find((item) => item.id === id)
+      if (member) {
+        // 假设 member.incomeTime 是一个字符串，首先创建一个 Date 对象
+        const date = new Date(member.expenseTime)
+
+        // 将日期格式化为 ISO 8601 格式（去掉毫秒部分），这通常是后端期望的格式
+        const formattedExpenseTime = date.toISOString().slice(0, 19)
+        this.dialogTitle = '编辑收入'
+        this.outForm = {
+          id: member.id,
+          expenseTime: formattedExpenseTime,
+          userType: member.userType,
+          amount: member.amount,
+          categoryName: member.categoryName,
+          remark: member.remark
+        }
+      }
+      // this.clearForm()
+      // console.log('this.inForm', this.inForm)
+      this.dialogFormVisible = true
+    },
+    saveExpenseList() {
+      if (this.outForm.id) {
+        ExpenseApi.updateExpense(this.outForm)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '更新成功!'
+            })
+            this.dialogFormVisible = false
+            this.clearForm()
+            this.getExpenseList()
+          }).catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '更新失败!'
+            })
+            console.error('更新失败:', err)
+          })
+      } else {
+        this.outForm.expenseTime = new Date(this.outForm.expenseTime).toISOString().slice(0, 19)
+        ExpenseApi.addExpense(this.outForm)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            })
+            this.dialogFormVisible = false
+            this.clearForm()
+            this.getExpenseList()
+          }).catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '添加失败!'
+            })
+            console.error('添加失败:', err)
+          })
+      }
+    },
+    dateOptions(time) {
+      return time.getTime() > Date.now() - 8.64e6
+    },
+    // disabledDate(time) {
+    //   return time.getTime() > Date.now()
+    // },
     handleSizeChange(size) {
       this.searchModel.pageSize = size
       this.getExpenseList()
@@ -253,7 +327,7 @@ export default {
         this.outList = response.data.records.map(item => ({
           id: item.id,
           expenseTime: this.formatDate(item.expenseTime),
-          type: item.type,
+          userType: item.type,
           amount: item.amount,
           categoryName: item.categoryName,
           remark: item.remark

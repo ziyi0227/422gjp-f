@@ -31,5 +31,12 @@ export default {
       method: 'post',
       data: data
     })
+  },
+  selectIncome(data) {
+    return request({
+      url: '/income/search',
+      method: 'post',
+      data: data
+    })
   }
 }

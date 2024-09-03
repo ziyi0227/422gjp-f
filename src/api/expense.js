@@ -17,5 +17,19 @@ export default {
       method: 'post',
       params: { id: id }
     })
+  },
+  addExpense(data) {
+    return request({
+      url: '/expense/add',
+      method: 'post',
+      data: data
+    })
+  },
+  updateExpense(data) {
+    return request({
+      url: '/expense/update',
+      method: 'post',
+      data: data
+    })
   }
 }
