@@ -118,7 +118,7 @@ import NightingaleChart from '@/views/dashboard/NightingaleChart'
 import AccessFrom from '@/views/dashboard/AccessFrom'
 import CircleAccessFrom from '@/views/dashboard/CircleAccessFrom'
 import VueMarkdown from 'vue-markdown'
-import { getDashboardInfo } from '@/api/user'
+import { getDashboardInfo } from '@/api/family'
 
 export default {
   name: 'Dashboard',

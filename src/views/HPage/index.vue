@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { getFamilyInfo } from '@/api/user'
+import { getFamilyInfo } from '@/api/family'
 import HomeDia from './HomeDia.vue'
 
 export default {

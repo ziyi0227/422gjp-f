@@ -4,7 +4,7 @@
     <el-card>
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
-        <el-select v-model="outForm.userType" multiple placeholder="请选择">
+        <el-select v-model="outForm.userType" clearable placeholder="请选择">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
@@ -143,6 +143,7 @@
 
 <script>
 import ExpenseApi from '@/api/expense'
+import { getUserType } from '@/api/user'
 export default {
   name: 'OutMoney',
   data() {
@@ -152,19 +153,7 @@ export default {
       categoryFormVisible: false,
       total: 0,
       title: '',
-      options: [{
-        value: '父亲',
-        label: '父亲'
-      }, {
-        value: '母亲',
-        label: '母亲'
-      }, {
-        value: '儿子',
-        label: '儿子'
-      }, {
-        value: '女儿',
-        label: '女儿'
-      }],
+      options: [],
       searchModel: {
         pageNo: 1,
         pageSize: 10
@@ -209,6 +198,7 @@ export default {
   },
   created() {
     this.getExpenseList()
+    this.getUserType()
   },
   mounted() {
     this.categoryList = this.states.map(item => {
@@ -324,12 +314,37 @@ export default {
         })
       })
     },
-    selectExpense(userTypes, startDate, endDate) {
-      console.log('Selected User Types:', userTypes)
-      console.log('Start Date:', startDate)
-      console.log('End Date:', endDate)
-      // 在这里调用接口，并传递参数
-      // 例如：this.fetchIncomeData(userTypes, startDate, endDate)
+    selectExpense(userType, startDate, endDate) {
+      // console.log('Selected User Types:', userType)
+      // console.log('Start Date:', startDate)
+      // console.log('End Date:', endDate)
+
+      // 转化日期为 ISO 格式
+      // if(startDate != null || endDate != null){
+      const startTime = new Date(startDate).toISOString().slice(0, 19)
+      const endTime = new Date(endDate).toISOString().slice(0, 19)
+      // }
+
+      // 调用接口，并传递参数
+      ExpenseApi.selectExpense({
+        userType: userType,
+        startTime: startTime,
+        endTime: endTime
+      }).then(response => {
+        // console.log(response)
+        this.outList = []
+        this.outList = response.data.map(item => ({
+          id: item.id,
+          expenseTime: this.formatDate(item.expenseTime),
+          userType: item.type,
+          amount: item.amount,
+          categoryName: item.categoryName,
+          remark: item.remark
+        }))
+        this.total = this.outList.length
+      }).catch((err) => {
+        console.error('查询收入数据失败:', err)
+      })
     },
     getExpenseList() {
       ExpenseApi.getExpenseList(this.searchModel).then(response => {
@@ -347,6 +362,19 @@ export default {
           categoryName: item.categoryName,
           remark: item.remark
         }))
+      }).catch((err) => {
+        console.error('加载成员数据失败:', err)
+      })
+    },
+    getUserType() {
+      getUserType().then(response => {
+        this.options = response.data.map(item => {
+          return {
+            value: item,
+            label: item
+          }
+        })
+        // console.log('options', this.options)
       }).catch((err) => {
         console.error('加载成员数据失败:', err)
       })

@@ -127,7 +127,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { Message } from 'element-ui'
-import { register } from '@/api/user'
+import { register } from '@/api/family'
 
 export default {
   name: 'LoginAndRegister',

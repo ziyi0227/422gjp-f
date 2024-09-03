@@ -10,7 +10,7 @@
             <i class="el-icon-picture-outline" />
             家庭头像
           </template>
-          <img class="img" :src="avatar" alt="">
+          <img class="img" :src="avatarUrl" alt="">
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
@@ -38,7 +38,7 @@
             <i class="el-icon-s-claim" />
             家庭账号
           </template>
-          {{ account }}
+          {{ accountName }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
@@ -60,17 +60,17 @@
 </template>
 
 <script>
-import { getFamilyInfo } from '@/api/user'
+import { getFamilyInfo } from '@/api/family'
 // import {data} from "autoprefixer";
 export default {
   name: 'Info',
   data() {
     return {
-      avatar: '',
+      avatarUrl: '',
       nickname: '',
       familyNumber: 0,
       id: 0,
-      account: '',
+      accountName: '',
       createTime: '',
       budget: ''
     }
@@ -81,11 +81,11 @@ export default {
   methods: {
     load() {
       getFamilyInfo().then((res) => {
-        this.avatar = res.data.avatarUrl
+        this.avatarUrl = res.data.avatarUrl
         this.nickname = res.data.name
         this.familyNumber = res.data.memberCount
         this.id = res.data.id
-        this.account = res.data.accountName
+        this.accountName = res.data.accountName
         this.createTime = this.formatDate(res.data.createTime)
         // console.log('createTime', this.createTime)
         // this.createTime = (res.data.createTime)

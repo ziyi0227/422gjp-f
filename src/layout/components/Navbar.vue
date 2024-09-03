@@ -40,7 +40,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ThemePicker from '@/components/ThemePicker'
-import { getFamilyInfo } from '@/api/user'
+import { getFamilyInfo } from '@/api/family'
 
 export default {
   components: {

@@ -3,8 +3,8 @@
     <!--  搜索栏-->
     <el-card>
       <el-col :span="5" class="search-row">
-        <!--选择查询的人（身份），多选-->
-        <el-select v-model="inForm.userType" placeholder="请选择">
+        <!--选择查询的人（身份）-->
+        <el-select v-model="inForm.userType" clearable placeholder="请选择">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
@@ -141,6 +141,7 @@
 
 <script>
 import IncomeApi from '@/api/Income'
+import { getUserType } from '@/api/user'
 export default {
   name: 'InMoney',
   data() {
@@ -150,28 +151,7 @@ export default {
       categoryFormVisible: false,
       dialogTitle: '',
       total: 0,
-      options: [{
-        value: '父亲',
-        label: '父亲'
-      }, {
-        value: '母亲',
-        label: '母亲'
-      }, {
-        value: '儿子',
-        label: '儿子'
-      }, {
-        value: '女儿',
-        label: '女儿'
-      }, {
-        value: '爷爷',
-        label: '爷爷'
-      }, {
-        value: '奶奶',
-        label: '奶奶'
-      }, {
-        value: '外公',
-        label: '外婆'
-      }],
+      options: [],
       searchModel: {
         pageNo: 1,
         pageSize: 10
@@ -216,6 +196,7 @@ export default {
   },
   created() {
     this.getIncomeList()
+    this.getUserType()
   },
   mounted() {
     this.categoryList = this.states.map(item => {
@@ -266,12 +247,12 @@ export default {
             this.clearForm()
             this.getIncomeList()
           }).catch((err) => {
-          this.$message({
-            type: 'error',
-            message: '更新失败!'
+            this.$message({
+              type: 'error',
+              message: '更新失败!'
+            })
+            console.error('更新失败:', err)
           })
-          console.error('更新失败:', err)
-        })
       } else {
         this.inForm.incomeTime = new Date(this.inForm.incomeTime).toISOString().slice(0, 19)
         IncomeApi.addIncome(this.inForm)
@@ -284,12 +265,12 @@ export default {
             this.clearForm()
             this.getIncomeList()
           }).catch((err) => {
-          this.$message({
-            type: 'error',
-            message: '添加失败!'
+            this.$message({
+              type: 'error',
+              message: '添加失败!'
+            })
+            console.error('添加失败:', err)
           })
-          console.error('添加失败:', err)
-        })
       }
     },
     dateOptions(time) {
@@ -359,16 +340,15 @@ export default {
       })
     },
     selectIncome(userType, startDate, endDate) {
-      console.log('Selected User Types:', userType)
-      console.log('Start Date:', startDate)
-      console.log('End Date:', endDate)
+      // console.log('Selected User Types:', userType)
+      // console.log('Start Date:', startDate)
+      // console.log('End Date:', endDate)
 
       // 转化日期为 ISO 格式
       // if(startDate != null || endDate != null){
-        const startTime = new Date(startDate).toISOString().slice(0, 19)
-        const endTime = new Date(endDate).toISOString().slice(0, 19)
+      const startTime = new Date(startDate).toISOString().slice(0, 19)
+      const endTime = new Date(endDate).toISOString().slice(0, 19)
       // }
-
 
       // 调用接口，并传递参数
       IncomeApi.selectIncome({
@@ -376,7 +356,7 @@ export default {
         startTime: startTime,
         endTime: endTime
       }).then(response => {
-        console.log(response)
+        // console.log(response)
         this.inList = []
         this.inList = response.data.map(item => ({
           id: item.id,
@@ -391,7 +371,6 @@ export default {
         console.error('查询收入数据失败:', err)
       })
     },
-
     formatDate(isoString) {
       const date = new Date(isoString)
       const year = date.getFullYear()
@@ -403,6 +382,19 @@ export default {
 
       // 返回格式为 YYYY-MM-DD HH:mm:ss
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    },
+    getUserType() {
+      getUserType().then(response => {
+        this.options = response.data.map(item => {
+          return {
+            value: item,
+            label: item
+          }
+        })
+        // console.log('options', this.options)
+      }).catch((err) => {
+        console.error('加载成员数据失败:', err)
+      })
     },
     remoteMethod(query) {
       if (query !== '') {

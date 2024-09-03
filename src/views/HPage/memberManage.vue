@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { getFamilyUser, addUser, deleteUser, updateUser } from '@/api/user'
+import { getFamilyUser, addUser, deleteUser, updateUser } from '@/api/family'
 export default {
   data() {
     return {
