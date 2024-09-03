@@ -4,13 +4,13 @@
     <el-card>
       <el-col :span="5" class="search-row">
         <!--选择查询的人（身份），多选-->
-        <el-select v-model="searchModel.member" multiple placeholder="请选择">
+        <el-select v-model="outForm.userType" multiple placeholder="请选择">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-col>
       <el-col :span="15">
         <el-date-picker
-          v-model="searchModel.date"
+          v-model="outForm.expenseTime"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -19,7 +19,15 @@
         />
       </el-col>
       <el-col :span="3">
-        <el-button type="primary" round icon="el-icon-search" style="margin-left: 20px;">查询</el-button>
+        <el-button
+          type="primary"
+          round
+          icon="el-icon-search"
+          style="margin-left: 20px;"
+          @click="selectExpense(outForm.userType, outForm.expenseTime[0], outForm.expenseTime[1])"
+        >
+          查询
+        </el-button>
       </el-col>
       <el-col :span="1">
         <el-button type="primary" icon="el-icon-plus" circle @click="openNewExpenseUI()" />
@@ -315,6 +323,13 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    selectExpense(userTypes, startDate, endDate) {
+      console.log('Selected User Types:', userTypes)
+      console.log('Start Date:', startDate)
+      console.log('End Date:', endDate)
+      // 在这里调用接口，并传递参数
+      // 例如：this.fetchIncomeData(userTypes, startDate, endDate)
     },
     getExpenseList() {
       ExpenseApi.getExpenseList(this.searchModel).then(response => {

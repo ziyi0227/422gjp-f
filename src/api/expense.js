@@ -31,5 +31,12 @@ export default {
       method: 'post',
       data: data
     })
+  },
+  selectExpense(data) {
+    return request({
+      url: '/expense/search',
+      method: 'post',
+      data: data
+    })
   }
 }

@@ -9,8 +9,31 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <div class="updateinfo">
           <div class="left">
+<!--            <el-form-item label="家庭头像" prop="avatar">-->
+<!--              <img style="width:150px;height:110px" :src="form.avatar" alt="pic">-->
+<!--            </el-form-item>-->
             <el-form-item label="家庭头像" prop="avatar">
-              <img style="width:150px;height:110px" :src="form.avatar" alt="pic">
+              <div class="avatar-container">
+                <img class="avatar-img" :src="form.avatar" alt="pic">
+                <div class="avatar-actions">
+                  <el-upload
+                    class="upload-demo"
+                    action=""
+                    :http-request="uploadFile"
+                    :show-file-list="false"
+                    :on-change="handleFileChange"
+                  >
+                    <el-button size="small" type="primary">上传本地图片</el-button>
+                  </el-upload>
+                  <el-input
+                    v-model="avatarUrlInput"
+                    placeholder="或输入图片链接"
+                    class="avatar-url-input"
+                    @input="handleUrlInput"
+                  >
+                  </el-input>
+                </div>
+              </div>
             </el-form-item>
             <el-form-item label="家庭密码" prop="password">
               <el-button @click="passwordFormVisible = true">修改密码</el-button>
@@ -89,7 +112,8 @@ export default {
         password: [
           { required: true, message: '家庭密码不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      avatarUrlInput: '' // 用于保存用户输入的图片链接
     }
   },
   mounted() {
@@ -123,14 +147,26 @@ export default {
           console.log(res)
           this.dialogVisible = false
           this.$emit('flesh')
-        })
-        .catch((err) => {
+        }).catch((err) => {
           console.log(err)
         })
     },
     handleClose() {
       this.dialogVisible = false
       this.$emit('flesh')
+    },
+    handleFileChange(file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.form.avatar = e.target.result // 将本地文件读取为base64编码的图片
+      }
+      reader.readAsDataURL(file.raw)
+    },
+    handleUrlInput() {
+      this.form.avatar = this.avatarUrlInput // 当用户输入图片链接时，将其设为头像
+    },
+    uploadFile() {
+      // 上传处理函数，如果需要上传到服务器，可以在这里实现
     }
   }
 }
@@ -147,7 +183,27 @@ export default {
 .right {
   overflow: hidden;
 }
-.el-dialog .el-input{
+.el-dialog .el-input {
   width: 85%;
 }
+.avatar-container {
+  display: flex;
+  align-items: center;
+}
+.avatar-img {
+  width: 150px;
+  height: 110px;
+}
+.avatar-actions {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+.upload-demo {
+  margin-bottom: 10px;
+}
+.avatar-url-input {
+  margin-top: 10px;
+}
 </style>
+
