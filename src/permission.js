@@ -8,7 +8,8 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+// no redirect whitelist
+const whiteList = ['/login', '/welcome'] // 添加 '/welcome' 到白名单
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -20,10 +21,14 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   const hasToken = getToken()
 
-  if (hasToken) {
+  if (to.path === '/') {
+    // 访问根路径时，重定向到 /welcome
+    next('/welcome')
+    NProgress.done()
+  } else if (hasToken) {
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
-      next({ path: '/' })
+      // if is logged in, redirect to the dashboard
+      next({ path: '/dashboard' })
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
@@ -34,7 +39,8 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           await store.dispatch('user/getInfo')
 
-          next()
+          // Always redirect to dashboard after login
+          next({ path: '/dashboard' })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
@@ -45,8 +51,7 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
-    /* has no token*/
-
+    /* has no token */
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()

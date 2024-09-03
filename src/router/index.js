@@ -6,7 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import Info from '@/views/HPage/Info'
-
+import Welcome from '@/views/WelcomePage/Welcome.vue'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -32,6 +32,11 @@ import Info from '@/views/HPage/Info'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  {
+    path: '/',
+    redirect: '/welcome', // 默认重定向到欢迎页面
+    hidden: true
+  },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -61,18 +66,33 @@ export const constantRoutes = [
     ],
     hidden: true
   },
-
   {
-    path: '/',
+    path: '/welcome',
+    component: Welcome, // 指向欢迎页面组件
+    hidden: true // 不在侧边栏显示
+  },
+  {
+    path: '/dashboard',
     component: Layout,
-    redirect: '/dashboard',
     children: [{
-      path: 'dashboard',
+      path: '',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard', affix: true }
     }]
   },
+
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   children: [{
+  //     path: 'dashboard',
+  //     name: 'Dashboard',
+  //     component: () => import('@/views/dashboard/index'),
+  //     meta: { title: '首页', icon: 'dashboard', affix: true }
+  //   }]
+  // },
 
   // {
   //   path: '/example',
