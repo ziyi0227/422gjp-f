@@ -29,6 +29,9 @@
             <el-form-item label="家庭账号" prop="account">
               <el-input v-model="form.account" disabled />
             </el-form-item>
+            <el-form-item label="预算" prop="account">
+              <el-input v-model="form.budget" />
+            </el-form-item>
           </div>
         </div>
       </el-form>
@@ -54,7 +57,8 @@ export default {
         nickname: '',
         familyNumber: Number,
         id: Number,
-        account: ''
+        account: '',
+        budget: Number
       },
       rules: {
         nickname: [
@@ -82,6 +86,7 @@ export default {
           this.form.familyNumber = res.data.memberCount
           // this.form.password = res.data.password
           this.form.nickname = res.data.name
+          this.form.budget = res.data.budget
           // this.form.area = res.data.area
           // console.log(res)
           // Object.assign(this.form, res.data)
