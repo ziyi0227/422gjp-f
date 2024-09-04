@@ -31,7 +31,37 @@
       </el-row>
     </el-card>
     <el-card>
-      <el-progress :percentage="100" :format="format" />
+      <el-row :gutter="20" align="middle">
+        <el-col :span="12">
+          <el-statistic :value="totalExpense" title="本月总花费" group-separator="," :precision="2">
+            <template slot="prefix">
+              <i class="el-icon-s-flag" style="color: #4CAF50" /> <!-- 柔和的绿色 -->
+            </template>
+            <template slot="suffix">
+              <i class="el-icon-s-flag" style="color: #757575" /> <!-- 中性的灰色 -->
+            </template>
+          </el-statistic>
+        </el-col>
+        <el-col :span="12">
+          <el-statistic :value="budget" title="月初预算" group-separator="," :precision="2">
+            <template slot="prefix">
+              <i class="el-icon-s-flag" style="color: #FF7043" /> <!-- 柔和的橙色 -->
+            </template>
+            <template slot="suffix">
+              <i class="el-icon-s-flag" style="color: #42A5F5" /> <!-- 柔和的蓝色 -->
+            </template>
+          </el-statistic>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20" style="margin-top: 20px;">
+        <el-col :span="24">
+          <el-progress
+            :percentage="parseFloat(((totalExpense / budget) * 100).toFixed(2))"
+            :format="format"
+          />
+        </el-col>
+      </el-row>
     </el-card>
     <el-row :gutter="20">
       <el-col :span="12">
@@ -57,8 +87,8 @@
               <!-- 使用带有滚动条的容器包裹评语内容 -->
               <div class="drawerText">
                 <el-scrollbar style="height: 100%; margin-outside: 3px">
-                  <VueMarkdown v-if="drawerType === 'income'" :source="evaltext.incomeText" />
-                  <VueMarkdown v-else :source="evaltext.outcomeText" />
+                  <VueMarkdown v-if="drawerType === 'income'" :source="evalText.incomeText" />
+                  <VueMarkdown v-else :source="evalText.outcomeText" />
                 </el-scrollbar>
               </div>
             </el-drawer>
@@ -86,7 +116,7 @@
             <el-divider direction="vertical" />
             <!-- 使用带有滚动条的容器包裹评语内容 -->
             <el-scrollbar style="height: 100%; margin-outside: 3px">
-              <VueMarkdown :source="evaltext.commend" />
+              <VueMarkdown :source="evalText.commend" />
             </el-scrollbar>
           </el-col>
         </el-row>
@@ -135,10 +165,12 @@ export default {
   },
   data() {
     return {
-      memberCount: 5,
-      asset: 120000.00,
-      totalBalance: 5000,
-      evaltext: {
+      memberCount: Number,
+      asset: Number,
+      totalBalance: Number,
+      budget: Number,
+      totalExpense: Number,
+      evalText: {
         assess: '',
         commend: '111测试**粗**',
         incomeText: '**income**',
@@ -160,7 +192,7 @@ export default {
   },
   methods: {
     format(percentage) {
-      return percentage === 100 ? '超预算' : `${percentage}%`
+      return percentage >= 100 ? '超预算' : `${percentage}%`
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
@@ -185,6 +217,8 @@ export default {
         this.memberCount = res.data.memberCount
         this.asset = res.data.asset
         this.totalBalance = res.data.totalBalance
+        this.budget = res.data.budget
+        this.totalExpense = res.data.totalExpense
       }).catch((err) => {
         console.log(err)
       })
@@ -203,7 +237,11 @@ export default {
     line-height: 46px;
   }
 }
-.dashboard-container .el-card{
+.dashboard-container{
+  margin-bottom: 20px;
+}
+.el-card {
+  padding: 20px;
   margin-bottom: 20px;
 }
 .drawerText{

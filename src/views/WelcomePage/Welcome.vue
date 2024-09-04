@@ -1,8 +1,8 @@
 <template>
   <div class="welcome-container">
     <div class="welcome-content">
-      <h1 class="title">欢迎来到422管家婆信息管理系统</h1>
-      <p class="subtitle">您的智能信息管理助手</p>
+      <h1 class="title">欢迎来到"422-管家婆"家庭收支管理系统</h1>
+      <p class="subtitle">您的智能收支信息管理助手</p>
       <button class="login-button" @click="navigateToLogin">进入系统</button>
     </div>
   </div>
@@ -70,14 +70,6 @@ export default {
   }
 }
 
-.title {
-  font-size: 3.5em;
-  margin-bottom: 0.5em;
-  color: #ffffff;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-  animation: titleAnimation 3s infinite alternate;
-}
-
 @keyframes titleAnimation {
   0% {
     transform: scale(1);
@@ -86,17 +78,23 @@ export default {
     transform: scale(1.1);
   }
 }
-
+.title {
+  font-size: 4em;
+  margin-bottom: 0.5em;
+  color: #8a2be2;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  animation: titleAnimation 3s infinite alternate;
+}
 .subtitle {
-  font-size: 1.8em;
-  margin-bottom: 1.5em;
-  color: #f7e7ce;
+  font-size: 2em;
+  margin-bottom: 2em;
+  color: #bf00ff;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .login-button {
-  padding: 1em 2.5em;
-  font-size: 1.2em;
+  padding: 1.2em 3em;
+  font-size: 1.4em;
   color: #ffffff;
   background-color: #ff9a9e;
   border: none;

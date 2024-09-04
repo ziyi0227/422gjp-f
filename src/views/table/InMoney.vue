@@ -142,7 +142,6 @@
 <script>
 import IncomeApi from '@/api/Income'
 import { getUserType } from '@/api/user'
-import {elem} from "svgo/lib/svgo/jsAPI";
 export default {
   name: 'InMoney',
   data() {
@@ -348,9 +347,9 @@ export default {
       let startTime = ''
       let endTime = ''
       // 转化日期为 ISO 格式
-      if(startDate != null || endDate != null){
-       startTime = new Date(startDate).toISOString().slice(0, 19)
-       endTime = new Date(endDate).toISOString().slice(0, 19)
+      if (startDate != null || endDate != null) {
+        startTime = new Date(startDate).toISOString().slice(0, 19)
+        endTime = new Date(endDate).toISOString().slice(0, 19)
       }
       // 调用接口，并传递参数
       IncomeApi.selectIncome({
