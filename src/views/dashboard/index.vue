@@ -68,7 +68,7 @@
         <el-card>
           <div slot="header" class="clearfix">
             <span>支出统计</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="incomeDrawer">分析></el-button>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="outcomeDrawer">分析></el-button>
           </div>
           <div>
             <LineChart />
@@ -82,7 +82,7 @@
         <el-card>
           <div slot="header" class="clearfix">
             <span>收入统计</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="outcomeDrawer">分析></el-button>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="incomeDrawer">分析></el-button>
             <el-drawer :title="drawerTitle" :visible.sync="drawer" :direction="direction" :before-close="handleClose">
               <!-- 使用带有滚动条的容器包裹评语内容 -->
               <div class="drawerText">
@@ -105,6 +105,7 @@
     <el-card>
       <div slot="header" class="clearfix">
         <span>统计与分析</span>
+        <el-button style="float: right; padding: 3px 0" type="primary" @click="analyseMember">分析></el-button>
       </div>
       <div>
         <el-row>
@@ -149,6 +150,7 @@ import AccessFrom from '@/views/dashboard/AccessFrom'
 import CircleAccessFrom from '@/views/dashboard/CircleAccessFrom'
 import VueMarkdown from 'vue-markdown'
 import { getDashboardInfo } from '@/api/family'
+import AnalyseApi from '@/api/analyse'
 
 export default {
   name: 'Dashboard',
@@ -165,11 +167,11 @@ export default {
   },
   data() {
     return {
-      memberCount: Number,
-      asset: Number,
-      totalBalance: Number,
-      budget: Number,
-      totalExpense: Number,
+      memberCount: 0,
+      asset: 0,
+      totalBalance: 0,
+      budget: 0,
+      totalExpense: 0,
       evalText: {
         assess: '',
         commend: '111测试**粗**',
@@ -201,15 +203,35 @@ export default {
         })
         .catch(_ => {})
     },
+    // 打开支出分析抽屉并获取数据
     outcomeDrawer() {
+      AnalyseApi.getExpenseAnalyse().then((res) => {
+        this.evalText.outcomeText = res.message // 假设 res.data 是需要的文本
+      }).catch((err) => {
+        console.log(err)
+      })
       this.drawer = true
       this.drawerType = 'outcome'
       this.drawerTitle = '支出分析'
     },
+    // 打开收入分析抽屉并获取数据
     incomeDrawer() {
+      AnalyseApi.getIncomeAnalyse().then((res) => {
+        this.evalText.incomeText = res.message // 假设 res.data 是需要的文本
+      }).catch((err) => {
+        console.log(err)
+      })
       this.drawer = true
       this.drawerType = 'income'
       this.drawerTitle = '收入分析'
+    },
+    // 分析成员数据
+    analyseMember() {
+      AnalyseApi.getMemberAnalyse().then((res) => {
+        this.evalText.commend = res.message; // 根据 API 返回的数据调整
+      }).catch((err) => {
+        console.error('获取成员分析数据失败', err);
+      })
     },
     load() {
       getDashboardInfo().then((res) => {
