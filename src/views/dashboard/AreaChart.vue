@@ -130,7 +130,7 @@ import {
 import { LineChart } from 'echarts/charts'
 import { LabelLayout, UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
-import { getFamilyIncomeAndExpense } from "@/api/family";
+import { getFamilyIncomeAndExpense } from '@/api/family'
 
 echarts.use([
   DatasetComponent,

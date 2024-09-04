@@ -14,7 +14,7 @@ import {
 import { LineChart } from 'echarts/charts'
 import { LabelLayout, UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
-import inCategory from "@/api/inCategory";
+import inCategory from '@/api/inCategory'
 
 echarts.use([
   DatasetComponent,
@@ -35,7 +35,7 @@ export default {
     return {
       option: null,
       datasetWithFilters: [],
-      seriesList: [],
+      seriesList: []
     }
   },
 
@@ -171,7 +171,7 @@ export default {
     },
 
     drawLine() {
-      const chartDom = document.getElementById('lineChartOut')  // Updated ID
+      const chartDom = document.getElementById('lineChartOut')// Updated ID
       if (chartDom) {
         const myChart = echarts.init(chartDom)
         if (this.option) {

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import inCategory from "@/api/inCategory";
+import inCategory from '@/api/inCategory'
 export default {
   name: 'BingChartOut',
 

@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import exCategoryApi from "@/api/exCategory";
+import exCategoryApi from '@/api/exCategory'
 
 export default {
   name: 'BingChart',

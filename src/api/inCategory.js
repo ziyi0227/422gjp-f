@@ -1,11 +1,9 @@
 import request from '@/utils/request'
-
-
 export default {
   getCategoryList() {
     return request({
       url: '/incategory/search',
-      method: 'post',
+      method: 'post'
     })
   },
   getSecondCategoryList(searchModel) {
@@ -13,7 +11,7 @@ export default {
       url: '/incategory/search/second',
       method: 'post',
       params: {
-        parentId:searchModel.id,
+        parentId: searchModel.id
       }
     })
   },
@@ -26,7 +24,5 @@ export default {
         year: '2024'
       }
     })
-  },
-
-
+  }
 }

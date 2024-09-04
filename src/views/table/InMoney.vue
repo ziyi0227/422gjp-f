@@ -98,42 +98,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="text" size="mini" style="text-align: left;margin-right: 80%" @click="categoryFormVisible = true">没找到类别？>>></el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <!--TODO:上传数据-->
         <el-button type="primary" @click="saveIncomeList">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!--  添加类别对话框-->
-    <el-dialog title="新增收入类别" :visible.sync="categoryFormVisible">
-      <el-form :model="categoryForm">
-        <el-form-item label="一级类别" :label-width="formLabelWidth">
-          <el-select
-            v-model="categoryForm.firstCategory"
-            filterable
-            allow-create
-            default-first-option
-            remote
-            placeholder="请选择/创建一级标签"
-            :remote-method="remoteMethod"
-            :loading="categoryLoading"
-          >
-            <el-option
-              v-for="item in categoryOptions"
-              :key="item.categoryValue"
-              :label="item.categoryLabel"
-              :value="item.categoryValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="二级类别" :label-width="formLabelWidth">
-          <el-input v-model="categoryForm.secondCategory" autocomplete="off" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="categoryFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="categoryFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>

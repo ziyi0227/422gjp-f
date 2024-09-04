@@ -174,9 +174,9 @@ export default {
       totalExpense: 0,
       evalText: {
         assess: '',
-        commend: '111测试**粗**',
-        incomeText: '**income**',
-        outcomeText: '**outcome**'
+        commend: '',
+        incomeText: '**分析中...**',
+        outcomeText: '**分析中...**'
       },
       drawer: false,
       direction: 'rtl',
@@ -228,9 +228,9 @@ export default {
     // 分析成员数据
     analyseMember() {
       AnalyseApi.getMemberAnalyse().then((res) => {
-        this.evalText.commend = res.message; // 根据 API 返回的数据调整
+        this.evalText.commend = res.message // 根据 API 返回的数据调整
       }).catch((err) => {
-        console.error('获取成员分析数据失败', err);
+        console.error('获取成员分析数据失败', err)
       })
     },
     load() {
