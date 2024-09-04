@@ -75,4 +75,14 @@ export function getDashboardInfo() {
     method: 'post'
   })
 }
+  export function getFamilyIncomeAndExpense() {
+    return request({
+      url: '/family/getFamilyIncomeAndExpense',
+      method: 'post',
+      params: {
+        year: '2024'
+      }
+    })
+  }
+
 

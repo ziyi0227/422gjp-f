@@ -14,6 +14,7 @@ import {
 import { LineChart } from 'echarts/charts'
 import { LabelLayout, UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
+import inCategory from "@/api/inCategory";
 
 echarts.use([
   DatasetComponent,
@@ -35,34 +36,58 @@ export default {
       option: null,
       datasetWithFilters: [],
       seriesList: [],
-      sampleData: [
-        { Month: 1, category: '总支出', Outcome: 400 },
-        { Month: 2, category: '总支出', Outcome: 450 },
-        { Month: 3, category: '总支出', Outcome: 500 },
-        { Month: 1, category: '吃饭', Outcome: 380 },
-        { Month: 2, category: '吃饭', Outcome: 420 },
-        { Month: 3, category: '吃饭', Outcome: 480 },
-        { Month: 4, category: '吃饭', Outcome: 480 },
-        { Month: 5, category: '吃饭', Outcome: 480 }
-      ]
     }
   },
 
   mounted() {
-    this.loadChartData(this.sampleData)
+    this.fetchData()
   },
 
   methods: {
-    loadChartData(_rawData) {
-      this.run(_rawData)
+    fetchData() {
+      inCategory.getLineChartData().then(response => {
+        this.loadChartData(response.data)
+      }).catch(error => {
+        console.error('获取数据失败', error)
+      })
+    },
+
+    loadChartData(data) {
+      const formattedData = this.formatDataForChart(data)
+      this.run(formattedData)
       this.drawLine()
     },
 
+    formatDataForChart(data) {
+      const months = Array.from({ length: 12 }, (_, i) => i + 1)
+      const categories = [...new Set(Object.values(data).flatMap(monthData => Object.keys(monthData)))]
+      const formattedData = []
+
+      months.forEach(month => {
+        let monthTotal = 0
+
+        categories.forEach(category => {
+          const amount = data[month]?.[category] || 0
+          monthTotal += amount
+          formattedData.push({
+            Month: month,
+            category: category,
+            Income: amount
+          })
+        })
+
+        formattedData.push({
+          Month: month,
+          category: '总收入',
+          Income: monthTotal
+        })
+      })
+
+      return formattedData
+    },
+
     run(_rawData) {
-      const categories = [
-        '总支出',
-        '吃饭'
-      ]
+      const categories = [...new Set(_rawData.map(item => item.category))]
 
       this.datasetWithFilters = []
       this.seriesList = []
@@ -99,10 +124,10 @@ export default {
           },
           encode: {
             x: 'Month',
-            y: 'Outcome',
-            label: ['category', 'Outcome'],
+            y: 'Income',
+            label: ['category', 'Income'],
             itemName: 'Month',
-            tooltip: ['Outcome']
+            tooltip: ['Income']
           }
         })
       })
@@ -117,7 +142,7 @@ export default {
           ...this.datasetWithFilters
         ],
         title: {
-          text: '月度支出统计',
+          text: '月度收入统计',
           left: '170px'
         },
         tooltip: {
@@ -136,7 +161,7 @@ export default {
           nameLocation: 'middle'
         },
         yAxis: {
-          name: 'Outcome'
+          name: 'Income'
         },
         grid: {
           right: 140
@@ -146,7 +171,7 @@ export default {
     },
 
     drawLine() {
-      const chartDom = document.getElementById('lineChartOut')
+      const chartDom = document.getElementById('lineChartOut')  // Updated ID
       if (chartDom) {
         const myChart = echarts.init(chartDom)
         if (this.option) {

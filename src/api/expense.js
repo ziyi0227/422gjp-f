@@ -38,5 +38,15 @@ export default {
       method: 'post',
       data: data
     })
+  },
+
+  getFamilyExpense(){
+    return request({
+      url: '/expense/statistics',
+      method : 'post',
+      params: {
+        year: '2024'
+      }
+    })
   }
 }

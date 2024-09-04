@@ -13,8 +13,20 @@ export default {
       url: '/incategory/search/second',
       method: 'post',
       params: {
-       parentId:searchModel.id,
+        parentId:searchModel.id,
       }
     })
-  }
+  },
+
+  getLineChartData() {
+    return request({
+      url: '/income/everyMonth/statistics',
+      method: 'post',
+      params: {
+        year: '2024'
+      }
+    })
+  },
+
+
 }

@@ -67,7 +67,7 @@
       <el-col :span="12">
         <el-card>
           <div slot="header" class="clearfix">
-            <span>收入统计</span>
+            <span>支出统计</span>
             <el-button style="float: right; padding: 3px 0" type="text" @click="incomeDrawer">分析></el-button>
           </div>
           <div>
@@ -81,7 +81,7 @@
       <el-col :span="12">
         <el-card>
           <div slot="header" class="clearfix">
-            <span>支出统计</span>
+            <span>收入统计</span>
             <el-button style="float: right; padding: 3px 0" type="text" @click="outcomeDrawer">分析></el-button>
             <el-drawer :title="drawerTitle" :visible.sync="drawer" :direction="direction" :before-close="handleClose">
               <!-- 使用带有滚动条的容器包裹评语内容 -->
