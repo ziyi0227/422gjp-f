@@ -166,6 +166,7 @@ export default {
             name: '支出类别',
             type: 'pie',
             radius: '50%',
+            top: '15%', // 将饼图的位置稍微下移，避免和图例重叠
             data,
             emphasis: {
               itemStyle: {
