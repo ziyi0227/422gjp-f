@@ -1,20 +1,20 @@
 import request from '@/utils/request'
 export default {
-  getCategoryList() {
+  getOutCategoryList() {
     return request({
       url: '/excategory/search',
-      method: 'post',
+      method: 'post'
     })
   },
-  getSecondCategoryList(searchModel) {
-    return request({
-      url: '/excategory/search/second',
-      method: 'post',
-      params: {
-        parentId: searchModel.id
-      }
-    })
-  },
+  // getSecondCategoryList(searchModel) {
+  //   return request({
+  //     url: '/excategory/search/second',
+  //     method: 'post',
+  //     params: {
+  //       parentId: searchModel.id
+  //     }
+  //   })
+  // },
 
   getLineChartData() {
     return request({

@@ -92,8 +92,9 @@
           <el-input v-model="outForm.amount" autocomplete="off" />
         </el-form-item>
         <el-form-item label="类别" :label-width="formLabelWidth">
-          <!--          <el-cascader v-model="outForm.categoryName" :props="props" />-->
-          <el-input v-model="outForm.categoryName" :props="props" />
+          <el-select v-model="outForm.categoryName">
+            <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="outForm.remark" type="textarea" />
@@ -111,6 +112,7 @@
 <script>
 import ExpenseApi from '@/api/expense'
 import { getUserType } from '@/api/user'
+import ExCategoryApi from '@/api/exCategory'
 export default {
   name: 'OutMoney',
   data() {
@@ -166,6 +168,7 @@ export default {
   created() {
     this.getExpenseList()
     this.getUserType()
+    this.getOutCategoryList()
   },
   mounted() {
     this.categoryList = this.states.map(item => {
@@ -359,6 +362,20 @@ export default {
 
       // 返回格式为 YYYY-MM-DD HH:mm:ss
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    },
+    getOutCategoryList() {
+      ExCategoryApi.getOutCategoryList().then(response => {
+        // 提取 name 字段并去重
+        const names = [...new Set(response.data.map(item => item.name))];
+
+        // 将处理后的数组赋值给 categoryOptions
+        this.categoryOptions = names.map(name => ({
+          value: name,
+          label: name
+        }));
+      }).catch(err => {
+        console.error('获取类别列表失败:', err);
+      });
     },
     remoteMethod(query) {
       if (query !== '') {

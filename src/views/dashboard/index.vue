@@ -235,7 +235,7 @@ export default {
     },
     load() {
       getDashboardInfo().then((res) => {
-        console.log(res)
+        // console.log(res)
         this.memberCount = res.data.memberCount
         this.asset = res.data.asset
         this.totalBalance = res.data.totalBalance

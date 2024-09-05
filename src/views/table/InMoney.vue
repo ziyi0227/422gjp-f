@@ -91,7 +91,9 @@
           <el-input v-model="inForm.amount" autocomplete="off" />
         </el-form-item>
         <el-form-item label="类别" :label-width="formLabelWidth">
-          <el-input v-model="inForm.categoryName" />
+          <el-select v-model="inForm.categoryName">
+            <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="inForm.remark" type="textarea" />
@@ -109,6 +111,7 @@
 <script>
 import IncomeApi from '@/api/Income'
 import { getUserType } from '@/api/user'
+import InCategoryApi from '@/api/inCategory'
 export default {
   name: 'InMoney',
   data() {
@@ -164,6 +167,7 @@ export default {
   created() {
     this.getIncomeList()
     this.getUserType()
+    this.getInCategoryList()
   },
   mounted() {
     this.categoryList = this.states.map(item => {
@@ -362,6 +366,20 @@ export default {
         // console.log('options', this.options)
       }).catch((err) => {
         console.error('加载成员数据失败:', err)
+      })
+    },
+    getInCategoryList() {
+      InCategoryApi.getInCategoryList().then(response => {
+        // 提取 name 字段并去重
+        const names = [...new Set(response.data.map(item => item.name))]
+
+        // 将处理后的数组赋值给 categoryOptions
+        this.categoryOptions = names.map(name => ({
+          value: name,
+          label: name
+        }))
+      }).catch(err => {
+        console.error('获取类别列表失败:', err)
       })
     },
     remoteMethod(query) {
